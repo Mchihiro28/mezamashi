@@ -1,7 +1,9 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
+  Alarm.init();
 }
 
 class MyApp extends StatelessWidget {
