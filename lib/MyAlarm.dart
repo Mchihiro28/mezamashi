@@ -1,5 +1,4 @@
 import 'package:alarm/alarm.dart';
-import 'package:alarm/model/alarm_settings.dart';
 import 'dart:math' as math;
 
 class MyAlarm{
@@ -11,12 +10,13 @@ class MyAlarm{
   String assetAudio = "";//音源へのパス
   double fadeDuration = 0;//音量をフェードする時間
 
-  MyAlarm(){
+  MyAlarm(this.hour,  //constructor
+          this.min,
+          this.isSnooze,
+          this.assetAudio){
     var random = math.Random();
     id = random.nextInt(100000000);
-    Alarm.ringStream.stream.listen(
-          (alarmSettings) => goToRingScreen(alarmSettings),
-    );
+
   }
 
 
@@ -42,6 +42,9 @@ class MyAlarm{
       enableNotificationOnKill: true,
     );
     Alarm.set(alarmSettings: alarmSettings);
+    Alarm.ringStream.stream.listen(
+          (alarmSettings) => goToRingScreen(alarmSettings),
+    );
   }
 
   void stopAlarm(){ //alarmを停止＆削除する
