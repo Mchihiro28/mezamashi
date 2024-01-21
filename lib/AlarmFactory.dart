@@ -1,8 +1,11 @@
 import 'dart:collection';
 import 'MyAlarm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class AlarmFactory{
   //MyAlarmクラスのインスタンスを生成、管理するクラス
+  //TODO firebaseかsharedpreferanceにアラームの中身を保存する
   List<MyAlarm> alarms = List<MyAlarm>.empty(); //作ったアラームのインスタンスを格納するリスト
 
 
@@ -19,7 +22,7 @@ class AlarmFactory{
                      int min,
                      bool isSnooze,
                      String assetAudio){
-    MyAlarm customAlarm = MyAlarm(hour, min, isSnooze, assetAudio);
+    MyAlarm customAlarm = MyAlarm(-1,hour, min, isSnooze, assetAudio);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
@@ -32,6 +35,27 @@ class AlarmFactory{
   void deleteAlarm(int index){ //alarmを削除する
     alarms[index].stopAlarm();
     alarms.removeAt(index);
+  }
+
+  Future<void> setPreference() async { //sharedPreferenceに保存
+    List<String> alarmInfo = List<String>.empty();
+    for (var element in alarms) {
+      alarmInfo.add(element.exportSettings());
+    }
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('alarms', alarmInfo);
+  }
+
+  Future<void> getPreference() async { //sharedPreferanceから取得
+    List<String>? temp = List<String>.empty();
+    final prefs = await SharedPreferences.getInstance();
+    temp = prefs.getStringList('alarms');
+    for (var element in temp!) {
+      final List<String> l = List<String>.from(json.decode(element));
+      //このメソッドを使うときはalarmsが空の前提
+      alarms.add(MyAlarm(int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), l[3] as bool, l[4]));
+    }
+    sortAlarm();
   }
 
 }

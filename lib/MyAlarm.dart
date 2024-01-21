@@ -10,12 +10,17 @@ class MyAlarm{
   String assetAudio = "";//音源へのパス
   double fadeDuration = 0;//音量をフェードする時間
 
-  MyAlarm(this.hour,  //constructor
+  MyAlarm(id, //constructor
+          this.hour,
           this.min,
           this.isSnooze,
           this.assetAudio){
-    var random = math.Random();
-    id = random.nextInt(100000000);
+    if(id == -1){ //idが-1なら新規に発行
+      var random = math.Random();
+      id = random.nextInt(100000000);
+    }else{//そうでないならすでにあるものを適用
+      id = this.id;
+    }
 
   }
 
@@ -52,8 +57,17 @@ class MyAlarm{
   }
 
   void goToRingScreen(AlarmSettings alarmSettings){//アラームを止める画面へと移動する処理を書く
-  //TODO
+  //TODO 実装
 
   }
 
+  String exportSettings(){ //sharedprefarence用にlistでエクスポート
+    List<String> res = List<String>.empty();
+    res.add(id.toString());
+    res.add(hour.toString());
+    res.add(min.toString());
+    res.add(isSnooze.toString());
+    res.add(assetAudio.toString());
+    return res.toString();
+  }
 }
