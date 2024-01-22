@@ -8,6 +8,10 @@ class AlarmFactory{
   //TODO firebaseかsharedpreferanceにアラームの中身を保存する
   List<MyAlarm> alarms = List<MyAlarm>.empty(); //作ったアラームのインスタンスを格納するリスト
 
+  AlarmFactory(){
+    getPreference();
+  }
+
 
   void sortAlarm(){ //alarmを時刻順に並び替える
     SplayTreeMap<int, MyAlarm> timeValues = SplayTreeMap();
@@ -50,12 +54,16 @@ class AlarmFactory{
     List<String>? temp = List<String>.empty();
     final prefs = await SharedPreferences.getInstance();
     temp = prefs.getStringList('alarms');
-    for (var element in temp!) {
-      final List<String> l = List<String>.from(json.decode(element));
-      //このメソッドを使うときはalarmsが空の前提
-      alarms.add(MyAlarm(int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), l[3] as bool, l[4]));
+    if(temp != null) {
+      for (var element in temp!) {
+        final List<String> l = List<String>.from(json.decode(element));
+        //このメソッドを使うときはalarmsが空の前提
+        alarms.add(MyAlarm(
+            int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), l[3] as bool,
+            l[4]));
+      }
+      sortAlarm();
     }
-    sortAlarm();
   }
 
 }
