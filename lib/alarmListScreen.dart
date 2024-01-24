@@ -14,6 +14,7 @@ class alarmListScreen extends StatefulWidget{
 class alarmListScreenState extends State<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
+ bool _switchValue = false;
 
  @override
   Widget build(BuildContext context) {
@@ -34,9 +35,32 @@ class alarmListScreenState extends State<alarmListScreen>{
               itemBuilder: (context, index) {
                 return Container(
                   //listの要素コンテナ
-                  height: 50,
-                  child: Text("${af.alarms[index].hour} : ${af.alarms[index].min}",
-                      style: const TextStyle(fontSize: 10)),
+                  height: 40,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width:3),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    // 横に並べる
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text("${af.alarms[index].hour} : ${af.alarms[index].min}",
+                          style: const TextStyle(fontSize: 15)),
+                      Transform.scale(
+                          scale:2.0,
+                          child: Switch(
+                            value: _switchValue,
+                            activeTrackColor: Colors.green[600],
+                            inactiveThumbColor: Colors.green[200],
+                            onChanged: (value){},
+                          )
+                      ),
+                      Text(af.alarms[index].assetAudio,style: const TextStyle(fontSize: 6)),
+                      Visibility(
+                          visible: af.alarms[index].isSnooze,
+                          maintainSize: true,
+                          child: Icon(Icons.snooze,color:Colors.green[200],size:6,)),
+                    ],
+                  ),
                 );
               },
             ),
