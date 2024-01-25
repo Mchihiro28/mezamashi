@@ -24,9 +24,8 @@ class AlarmFactory{
 
   void createAlarms( int hour,  //新しいalarmを作成
                      int min,
-                     bool isSnooze,
                      String assetAudio){
-    MyAlarm customAlarm = MyAlarm(-1,hour, min, isSnooze, assetAudio);
+    MyAlarm customAlarm = MyAlarm(-1,hour, min, assetAudio);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
@@ -55,12 +54,11 @@ class AlarmFactory{
     final prefs = await SharedPreferences.getInstance();
     temp = prefs.getStringList('alarms');
     if(temp != null) {
-      for (var element in temp!) {
+      for (var element in temp) {
         final List<String> l = List<String>.from(json.decode(element));
         //このメソッドを使うときはalarmsが空の前提
         alarms.add(MyAlarm(
-            int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), l[3] as bool,
-            l[4]));
+            int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), l[3]));
       }
       sortAlarm();
     }

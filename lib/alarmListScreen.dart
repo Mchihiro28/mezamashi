@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'AlarmFactory.dart';
+import 'SinpleDialog.dart';
 
 class alarmListScreen extends StatefulWidget{
   //アラームを管理する画面　メイン画面の一つ
@@ -14,7 +15,35 @@ class alarmListScreen extends StatefulWidget{
 class alarmListScreenState extends State<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
- bool _switchValue = false;
+ bool switchValue = false;
+
+
+ Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
+   TimeOfDay selectedTime = TimeOfDay.now();
+   final TimeOfDay? picked = await showTimePicker(//time picker
+     context: context,
+     initialTime: selectedTime,
+     initialEntryMode: TimePickerEntryMode.input,
+     helpText: "アラームを設定したい時刻を入力してください"
+   );
+
+   if (picked == null) return;
+   if (!mounted) return;
+
+   final String? selectedAudio = await showDialog<String>(
+       context: context,
+       builder: (_) {
+         return const SimpleDialogSample();
+       });
+
+   if (selectedAudio != null) {
+     setState(() {
+       selectedTime = picked;
+       //TODO Datetimeをhour minに変換
+       af.createAlarms(hour, min, selectedAudio);
+     });
+   }
+ }
 
  @override
   Widget build(BuildContext context) {
@@ -22,6 +51,13 @@ class alarmListScreenState extends State<alarmListScreen>{
     title: 'alarm',
     theme: ThemeData(primarySwatch: Colors.blue),
     home: Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => {
+            //TODO フローティングアクションボタンを押された時の処理.
+            createNewAlarm(context)
+          },
+          child: const Icon(Icons.add)
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -48,17 +84,12 @@ class alarmListScreenState extends State<alarmListScreen>{
                       Transform.scale(
                           scale:2.0,
                           child: Switch(
-                            value: _switchValue,
+                            value: switchValue,
                             activeTrackColor: Colors.green[600],
                             inactiveThumbColor: Colors.green[200],
                             onChanged: (value){},
                           )
                       ),
-                      Text(af.alarms[index].assetAudio,style: const TextStyle(fontSize: 6)),
-                      Visibility(
-                          visible: af.alarms[index].isSnooze,
-                          maintainSize: true,
-                          child: Icon(Icons.snooze,color:Colors.green[200],size:6,)),
                     ],
                   ),
                 );

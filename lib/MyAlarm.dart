@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:alarm/alarm.dart';
 import 'dart:math' as math;
 
@@ -6,14 +8,12 @@ class MyAlarm{
   int id = 0; //alarmごとに固有のid
   int hour = 0;//鳴る時間
   int min = 0;//鳴る分
-  bool isSnooze = false;//スヌーズが有効か
   String assetAudio = "";//音源へのパス
   double fadeDuration = 0;//音量をフェードする時間
 
   MyAlarm(id, //constructor
           this.hour,
           this.min,
-          this.isSnooze,
           this.assetAudio){
     if(id == -1){ //idが-1なら新規に発行
       var random = math.Random();
@@ -52,6 +52,18 @@ class MyAlarm{
     );
   }
 
+  void snooze(){  //10分後にもう一度アラームを鳴らす
+    int thisHour = hour;
+    int thisMin = min;
+    stopAlarm();
+    int nextTime = hour*60 + min + 10;
+    hour = (nextTime/60) as int;
+    min = nextTime % 60;
+    createAlarm();
+    hour = thisHour;
+    min = thisMin;
+  }
+
   void stopAlarm(){ //alarmを停止＆削除する
     Alarm.stop(id);
   }
@@ -66,7 +78,6 @@ class MyAlarm{
     res.add(id.toString());
     res.add(hour.toString());
     res.add(min.toString());
-    res.add(isSnooze.toString());
     res.add(assetAudio.toString());
     return res.toString();
   }
