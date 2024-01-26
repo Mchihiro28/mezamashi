@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'AlarmFactory.dart';
-import 'SinpleDialog.dart';
+import 'SimpleDialog.dart';
 
 class alarmListScreen extends StatefulWidget{
   //アラームを管理する画面　メイン画面の一つ
-  //TODO リストの要素＝＞有効化ボタン、時刻、音源、スヌーズ
+  const alarmListScreen({super.key});
 
   @override
   alarmListScreenState createState() => alarmListScreenState();
@@ -36,13 +36,12 @@ class alarmListScreenState extends State<alarmListScreen>{
          return const SimpleDialogSample();
        });
 
-   if (selectedAudio != null) {
+
      setState(() {
        selectedTime = picked;
-       //TODO Datetimeをhour minに変換
-       af.createAlarms(hour, min, selectedAudio);
+       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "デフォルト音源");//TODO selectedAudioのデフォルトを設定
      });
-   }
+
  }
 
  @override
@@ -53,7 +52,6 @@ class alarmListScreenState extends State<alarmListScreen>{
     home: Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
-            //TODO フローティングアクションボタンを押された時の処理.
             createNewAlarm(context)
           },
           child: const Icon(Icons.add)

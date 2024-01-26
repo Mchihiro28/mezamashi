@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SimpleDialogSample extends StatelessWidget {
+  //TODO 選択肢を書き換える
+
   const SimpleDialogSample({Key? key}) : super(key: key);
   static const String audio1 = "";
   static const String audio2 = "";

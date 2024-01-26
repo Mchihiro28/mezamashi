@@ -3,21 +3,6 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final bool _switchValue = false;
-  final List<Map<String, dynamic>> listItems = [
-    {
-      'text': '12 : 50',
-      'color': Colors.blue[600],
-    },
-    {
-      'text': '13 : 00',
-      'color': Colors.blue[300],
-    },
-    {
-      'text': '9 : 00',
-      'color': Colors.blue[100],
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,39 +11,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
+              Container(
+              width: double.infinity,
               height: 500,
-              padding: const EdgeInsets.all(4),
-              // 配列を元にリスト表示
-              child: ListView.builder(
-                itemCount: listItems.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 160,
-                    decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width:3),
-                    borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      // 横に並べる
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text(listItems[index]['text'],style: const TextStyle(fontSize: 50)),
-                        Transform.scale(
-                          scale:2.0,
-                          child: Switch(
-                            value: _switchValue,
-                            activeTrackColor: Colors.green[600],
-                            inactiveThumbColor: Colors.green[300],
-                            onChanged: (value){},
-                            )
-                          ),
-                        const Text('音源1',style: TextStyle(fontSize: 25)),
-                        Icon(Icons.snooze,color:Colors.green[300],size:25,),
-                      ],
-                    ),
-                  );
-                },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('12:00', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36)),
+                  OutlinedButton(
+                  onPressed: () {},
+                  child: const Text('stop'),
+                ),
+                  OutlinedButton(
+                  onPressed: () {},
+                  child: const Text('snooze'),
+                ),
+                ],
               ),
             ),
           ],
