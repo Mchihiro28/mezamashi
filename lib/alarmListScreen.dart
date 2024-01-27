@@ -46,6 +46,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  @override
   Widget build(BuildContext context) {
+   var _ss = MediaQuery.of(context).size;
   return MaterialApp(
     title: 'alarm',
     theme: ThemeData(primarySwatch: Colors.blue),
@@ -59,9 +60,9 @@ class alarmListScreenState extends State<alarmListScreen>{
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          const Text('アラーム一覧', style: TextStyle(fontSize: 20)),
+          Text('アラーム一覧', style: TextStyle(fontSize: _ss.height*0.04)),
           Container(
-            height: 125,
+            height: _ss.height,
             padding: const EdgeInsets.all(4),
             // 配列を元にリスト表示
             child: ListView.builder(
@@ -69,16 +70,16 @@ class alarmListScreenState extends State<alarmListScreen>{
               itemBuilder: (context, index) {
                 return Container(
                   //listの要素コンテナ
-                  height: 40,
+                  height: _ss.height*0.08,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width:3),
+                      border: Border.all(color: Colors.black, width:_ss.height*0.004),
                       borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     // 横に並べる
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text("${af.alarms[index].hour} : ${af.alarms[index].min}",
-                          style: const TextStyle(fontSize: 15)),
+                          style: TextStyle(fontSize: _ss.height*0.03)),
                       Transform.scale(
                           scale:2.0,
                           child: Switch(

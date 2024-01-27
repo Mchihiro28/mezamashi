@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:alarm/alarm.dart';
 import 'dart:math' as math;
 

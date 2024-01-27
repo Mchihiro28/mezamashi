@@ -1,4 +1,70 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class ringScreen{
   //アラームが鳴ったときに表示される画面
   //TODO　スヌーズボタン　解除ボタン（パズル）　現在時刻
+
+  @override
+  Widget build(BuildContext context) {
+    var _ss = MediaQuery.of(context).size;//画面サイズを取得
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              height: _ss.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    // 外側の余白（マージン）
+                    margin: EdgeInsets.all(_ss.height*0.04),
+                    child:  Text('12:00', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _ss.height*0.16)),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: _ss.height*0.4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(_ss.height*0.3, _ss.height*0.1),
+                            backgroundColor: Colors.green[600],
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {}, //TODO
+                          child: Text('Stop', style: TextStyle(fontSize: _ss.height*0.05)),
+                        ),
+                        OutlinedButton(
+                          onPressed: () {}, //TODO
+                          style: OutlinedButton.styleFrom(
+
+                            foregroundColor: Colors.green[600],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text('snooze'),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
