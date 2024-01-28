@@ -1,5 +1,7 @@
 import 'package:alarm/alarm.dart';
+import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:mezamashi/ringScreen.dart';
 
 class MyAlarm{
   //Alarm機能を実現するクラス。AlarmControllerによってインスタンスが生成される
@@ -45,9 +47,6 @@ class MyAlarm{
       enableNotificationOnKill: true,
     );
     Alarm.set(alarmSettings: alarmSettings);
-    Alarm.ringStream.stream.listen(
-          (alarmSettings) => goToRingScreen(alarmSettings),
-    );
   }
 
   void snooze(){  //10分後にもう一度アラームを鳴らす
@@ -64,11 +63,6 @@ class MyAlarm{
 
   void stopAlarm(){ //alarmを停止＆削除する
     Alarm.stop(id);
-  }
-
-  void goToRingScreen(AlarmSettings alarmSettings){//アラームを止める画面へと移動する処理を書く
-  //TODO 実装
-
   }
 
   String exportSettings(){ //sharedprefarence用にlistでエクスポート

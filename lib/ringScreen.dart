@@ -1,9 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mezamashi/MyAlarm.dart';
+import 'AlarmFactory.dart';
 
-class ringScreen{
+class ringScreen extends StatelessWidget {
   //アラームが鳴ったときに表示される画面
   //TODO　スヌーズボタン　解除ボタン（パズル）　現在時刻
+
+  final AlarmFactory af = AlarmFactory();
+  final MyAlarm? myAlarm;
+
+  ringScreen([this.myAlarm, Key? key]) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +30,9 @@ class ringScreen{
                   Container(
                     // 外側の余白（マージン）
                     margin: EdgeInsets.all(_ss.height*0.04),
-                    child:  Text('12:00', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _ss.height*0.16)),
+                    child:  Text('${af.alarms[]}:${}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _ss.height*0.16)),
                   ),
+                  //TODO　時刻
                   Container(
                     width: double.infinity,
                     height: _ss.height*0.4,
@@ -45,7 +52,7 @@ class ringScreen{
                           child: Text('Stop', style: TextStyle(fontSize: _ss.height*0.05)),
                         ),
                         OutlinedButton(
-                          onPressed: () {}, //TODO
+                          onPressed: () {}, //TODO here
                           style: OutlinedButton.styleFrom(
 
                             foregroundColor: Colors.green[600],

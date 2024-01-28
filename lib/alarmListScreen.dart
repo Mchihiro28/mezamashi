@@ -1,4 +1,7 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:mezamashi/MyAlarm.dart';
+import 'package:mezamashi/ringScreen.dart';
 
 import 'AlarmFactory.dart';
 import 'SimpleDialog.dart';
@@ -19,6 +22,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
+   MyAlarm? ma;
    TimeOfDay selectedTime = TimeOfDay.now();
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
@@ -37,10 +41,18 @@ class alarmListScreenState extends State<alarmListScreen>{
        });
 
 
-     setState(() {
-       selectedTime = picked;
-       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "デフォルト音源");//TODO selectedAudioのデフォルトを設定
-     });
+   setState(() {
+      selectedTime = picked;
+      ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "デフォルト音源");//TODO selectedAudioのデフォルトを設定
+      af.setPreference();
+    });
+
+   Alarm.ringStream.stream.listen(
+         (alarmSettings) => Navigator.push(
+       context,
+       MaterialPageRoute(builder: (context) => ringScreen(ma)),
+     ),
+   );
 
  }
 
@@ -86,7 +98,15 @@ class alarmListScreenState extends State<alarmListScreen>{
                             value: switchValue,
                             activeTrackColor: Colors.green[600],
                             inactiveThumbColor: Colors.green[200],
-                            onChanged: (value){},
+                            onChanged: (value){setState(() {
+                              switchValue = value;
+                              if(switchValue){
+                                af.alarms[index].createAlarm();
+                                //TODO here
+                              }else{
+                                af.alarms[index].stopAlarm();
+                              }
+                            });},
                           )
                       ),
                     ],

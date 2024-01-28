@@ -22,17 +22,14 @@ class AlarmFactory{
     alarms.addAll(List.from(timeValues.values));
   }
 
-  void createAlarms( int hour,  //新しいalarmを作成
+  MyAlarm createAlarms( int hour,  //新しいalarmを作成
                      int min,
                      String assetAudio){
     MyAlarm customAlarm = MyAlarm(-1,hour, min, assetAudio);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
-  }
-
-  MyAlarm getAlarm(int index){ //alarmsのgetter
-    return alarms[index];
+    return customAlarm;
   }
 
   void deleteAlarm(int index){ //alarmを削除する
