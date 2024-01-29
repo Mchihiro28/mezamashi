@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:mezamashi/MyAlarm.dart';
 import 'AlarmFactory.dart';
@@ -7,9 +8,9 @@ class ringScreen extends StatelessWidget {
   //TODO　スヌーズボタン　解除ボタン（パズル）　現在時刻
 
   final AlarmFactory af = AlarmFactory();
-  final MyAlarm? myAlarm;
+  final MyAlarm myAlarm;
 
-  ringScreen([this.myAlarm, Key? key]) : super(key: key);
+  ringScreen({required this.myAlarm, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +31,8 @@ class ringScreen extends StatelessWidget {
                   Container(
                     // 外側の余白（マージン）
                     margin: EdgeInsets.all(_ss.height*0.04),
-                    child:  Text('${af.alarms[]}:${}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _ss.height*0.16)),
+                    child:  Text('${myAlarm.hour}:${myAlarm.min}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _ss.height*0.16)),
                   ),
-                  //TODO　時刻
                   Container(
                     width: double.infinity,
                     height: _ss.height*0.4,
@@ -48,24 +48,33 @@ class ringScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          onPressed: () {}, //TODO
+                          onPressed: () {//stop
+                            myAlarm.stopAlarm();
+                          },
                           child: Text('Stop', style: TextStyle(fontSize: _ss.height*0.05)),
                         ),
                         OutlinedButton(
-                          onPressed: () {}, //TODO here
+                          onPressed: () {//snooze
+                            myAlarm.stopAlarm();
+                            myAlarm.snooze();
+                            Alarm.ringStream.stream.listen(
+                                  (alarmSettings) => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ringScreen(myAlarm: myAlarm)),
+                              ),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
-
                             foregroundColor: Colors.green[600],
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          child: const Text('snooze'),
+                          child: const Text('スヌーズ'),
                         ),
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),

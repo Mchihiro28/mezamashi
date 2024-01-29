@@ -35,6 +35,7 @@ class AlarmFactory{
   void deleteAlarm(int index){ //alarmを削除する
     alarms[index].stopAlarm();
     alarms.removeAt(index);
+    setPreference();
   }
 
   Future<void> setPreference() async { //sharedPreferenceに保存

@@ -22,8 +22,8 @@ class alarmListScreenState extends State<alarmListScreen>{
 
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
-   MyAlarm? ma;
    TimeOfDay selectedTime = TimeOfDay.now();
+   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, ""); //TODO デフォルトの音源
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
      initialTime: selectedTime,
@@ -45,15 +45,14 @@ class alarmListScreenState extends State<alarmListScreen>{
       selectedTime = picked;
       ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "デフォルト音源");//TODO selectedAudioのデフォルトを設定
       af.setPreference();
+
+      Alarm.ringStream.stream.listen(
+            (alarmSettings) => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ringScreen(myAlarm: ma)),
+        ),
+      );
     });
-
-   Alarm.ringStream.stream.listen(
-         (alarmSettings) => Navigator.push(
-       context,
-       MaterialPageRoute(builder: (context) => ringScreen(ma)),
-     ),
-   );
-
  }
 
  @override
@@ -67,7 +66,7 @@ class alarmListScreenState extends State<alarmListScreen>{
           onPressed: () => {
             createNewAlarm(context)
           },
-          child: const Icon(Icons.add)
+          child: const Icon(Icons.add_alarm)
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -90,11 +89,11 @@ class alarmListScreenState extends State<alarmListScreen>{
                     // 横に並べる
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text("${af.alarms[index].hour} : ${af.alarms[index].min}",
+                      Text("${af.alarms[index].hour} : ${af.alarms[index].min}",  //時刻
                           style: TextStyle(fontSize: _ss.height*0.03)),
                       Transform.scale(
                           scale:2.0,
-                          child: Switch(
+                          child: Switch(  //有効化スイッチ
                             value: switchValue,
                             activeTrackColor: Colors.green[600],
                             inactiveThumbColor: Colors.green[200],
@@ -102,12 +101,29 @@ class alarmListScreenState extends State<alarmListScreen>{
                               switchValue = value;
                               if(switchValue){
                                 af.alarms[index].createAlarm();
-                                //TODO here
+                                Alarm.ringStream.stream.listen(
+                                      (alarmSettings) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ringScreen(myAlarm : af.alarms[index])),
+                                  ),
+                                );
                               }else{
                                 af.alarms[index].stopAlarm();
                               }
                             });},
                           )
+                          ),
+                      Text(af.alarms[index].assetAudio,style: TextStyle(fontSize: _ss.height*0.02)),  //音源
+                      IconButton( //削除ボタン
+                        icon: const Icon(Icons.delete),
+                        iconSize: _ss.height*0.02,
+                        color: Colors.grey,
+                        tooltip: '削除ボタン',
+                        onPressed: () {
+                          setState(() {
+                            af.deleteAlarm(index);
+                          });
+                        },
                       ),
                     ],
                   ),
