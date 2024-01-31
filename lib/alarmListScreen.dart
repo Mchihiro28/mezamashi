@@ -23,7 +23,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
    TimeOfDay selectedTime = TimeOfDay.now();
-   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, ""); //TODO デフォルトの音源
+   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, "sounds/1_default.mp3");
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
      initialTime: selectedTime,
@@ -37,13 +37,13 @@ class alarmListScreenState extends State<alarmListScreen>{
    final String? selectedAudio = await showDialog<String>(
        context: context,
        builder: (_) {
-         return const SimpleDialogSample();
+         return SimpleDialogSample();
        });
 
 
    setState(() {
       selectedTime = picked;
-      ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "デフォルト音源");//TODO selectedAudioのデフォルトを設定
+      ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "sounds/1_default.mp3");
       af.setPreference();
 
       Alarm.ringStream.stream.listen(

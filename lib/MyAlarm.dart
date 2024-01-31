@@ -8,7 +8,7 @@ class MyAlarm{
   int id = 0; //alarmごとに固有のid
   int hour = 12;//鳴る時間
   int min = 0;//鳴る分
-  String assetAudio = "";//音源へのパス
+  String assetAudio = "sounds/1_default.mp3";//音源へのパス
   double fadeDuration = 0;//音量をフェードする時間
 
   MyAlarm(id, //constructor
