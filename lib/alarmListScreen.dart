@@ -23,18 +23,18 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
    TimeOfDay selectedTime = TimeOfDay.now();
-   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, "sounds/1_default.mp3");
+   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, 1);
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
      initialTime: selectedTime,
-     initialEntryMode: TimePickerEntryMode.input,
+     initialEntryMode: TimePickerEntryMode.dial,
      helpText: "アラームを設定したい時刻を入力してください"
    );
 
    if (picked == null) return;
    if (!mounted) return;
 
-   final String? selectedAudio = await showDialog<String>(
+   final int? selectedAudio = await showDialog<int>(
        context: context,
        builder: (_) {
          return SimpleDialogSample();
@@ -43,7 +43,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
    setState(() {
       selectedTime = picked;
-      ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? "sounds/1_default.mp3");
+      ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
       af.setPreference();
 
       Alarm.ringStream.stream.listen(
@@ -57,7 +57,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  @override
   Widget build(BuildContext context) {
-   var _ss = MediaQuery.of(context).size;
+   var ss = MediaQuery.of(context).size;
   return MaterialApp(
     title: 'alarm',
     theme: ThemeData(primarySwatch: Colors.blue),
@@ -71,9 +71,10 @@ class alarmListScreenState extends State<alarmListScreen>{
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Text('アラーム一覧', style: TextStyle(fontSize: _ss.height*0.04)),
+          SizedBox.square(dimension: ss.height*0.06,),
+          Text('アラーム一覧', style: TextStyle(fontSize: ss.height*0.025)),
           Container(
-            height: _ss.height,
+            height: ss.height*0.8,
             padding: const EdgeInsets.all(4),
             // 配列を元にリスト表示
             child: ListView.builder(
@@ -81,18 +82,18 @@ class alarmListScreenState extends State<alarmListScreen>{
               itemBuilder: (context, index) {
                 return Container(
                   //listの要素コンテナ
-                  height: _ss.height*0.08,
+                  height: ss.height*0.08,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width:_ss.height*0.004),
+                      border: Border.all(color: Colors.black, width:ss.height*0.004),
                       borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     // 横に並べる
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text("${af.alarms[index].hour} : ${af.alarms[index].min}",  //時刻
-                          style: TextStyle(fontSize: _ss.height*0.03)),
+                          style: TextStyle(fontSize: ss.height*0.03)),
                       Transform.scale(
-                          scale:2.0,
+                          scale:1.0,
                           child: Switch(  //有効化スイッチ
                             value: switchValue,
                             activeTrackColor: Colors.green[600],
@@ -112,11 +113,11 @@ class alarmListScreenState extends State<alarmListScreen>{
                               }
                             });},
                           )
-                          ),
-                      Text(af.alarms[index].assetAudio,style: TextStyle(fontSize: _ss.height*0.02)),  //音源
+                      ),
+                      Text(af.alarms[index].audioName,style: TextStyle(fontSize: ss.height*0.02)),  //音源
                       IconButton( //削除ボタン
                         icon: const Icon(Icons.delete),
-                        iconSize: _ss.height*0.02,
+                        iconSize: ss.height*0.02,
                         color: Colors.grey,
                         tooltip: '削除ボタン',
                         onPressed: () {

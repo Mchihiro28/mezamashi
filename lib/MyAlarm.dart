@@ -1,27 +1,44 @@
 import 'package:alarm/alarm.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:mezamashi/ringScreen.dart';
 
 class MyAlarm{
   //Alarm機能を実現するクラス。AlarmControllerによってインスタンスが生成される
-  int id = 0; //alarmごとに固有のid
+  int id = -1; //alarmごとに固有のid
   int hour = 12;//鳴る時間
   int min = 0;//鳴る分
   String assetAudio = "sounds/1_default.mp3";//音源へのパス
+  String audioName ="アラーム1";
   double fadeDuration = 0;//音量をフェードする時間
 
-  MyAlarm(id, //constructor
+  MyAlarm(int id, //constructor
           this.hour,
           this.min,
-          this.assetAudio){
-    if(id == -1){ //idが-1なら新規に発行
+          int audioNum){
+    if(id < 1){ //idが-1なら新規に発行
       var random = math.Random();
-      id = random.nextInt(100000000);
+      this.id = random.nextInt(1000000);
     }else{//そうでないならすでにあるものを適用
       id = this.id;
     }
 
+    switch(audioNum) {
+      case 1:
+        assetAudio = 'sounds/1_default.mp3';
+        audioName = "アラーム1";
+        break;
+      case 2:
+        assetAudio = 'sounds/2_slow.mp3';
+        audioName = "アラーム2";
+        break;
+      case 3:
+        assetAudio = 'sounds/3_classic.mp3';
+        audioName = "アラーム3";
+        break;
+      default:
+        audioName = "アラーム1";
+        assetAudio = 'sounds/1_default.mp3';
+        break;
+    }
   }
 
 
@@ -49,12 +66,12 @@ class MyAlarm{
     Alarm.set(alarmSettings: alarmSettings);
   }
 
-  void snooze(){  //10分後にもう一度アラームを鳴らす
+  void snooze(int snoozeValue){  //もう一度アラームを鳴らす
     int thisHour = hour;
     int thisMin = min;
     stopAlarm();
-    int nextTime = hour*60 + min + 10;
-    hour = (nextTime/60) as int;
+    int nextTime = hour*60 + min + snoozeValue;
+    hour = nextTime~/60;
     min = nextTime % 60;
     createAlarm();
     hour = thisHour;
@@ -66,7 +83,7 @@ class MyAlarm{
   }
 
   String exportSettings(){ //sharedprefarence用にlistでエクスポート
-    List<String> res = List<String>.empty();
+    List<String> res = [];
     res.add(id.toString());
     res.add(hour.toString());
     res.add(min.toString());

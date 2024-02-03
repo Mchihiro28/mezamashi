@@ -6,7 +6,7 @@ import 'dart:convert';
 class AlarmFactory{
   //MyAlarmクラスのインスタンスを生成、管理するクラス
   //TODO firebaseかsharedpreferanceにアラームの中身を保存する
-  List<MyAlarm> alarms = List<MyAlarm>.empty(); //作ったアラームのインスタンスを格納するリスト
+  List<MyAlarm> alarms = []; //作ったアラームのインスタンスを格納するリスト
 
   AlarmFactory(){
     getPreference();
@@ -24,8 +24,8 @@ class AlarmFactory{
 
   MyAlarm createAlarms( int hour,  //新しいalarmを作成
                      int min,
-                     String assetAudio){
-    MyAlarm customAlarm = MyAlarm(-1,hour, min, assetAudio);
+                     int audioNum){
+    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
@@ -39,7 +39,7 @@ class AlarmFactory{
   }
 
   Future<void> setPreference() async { //sharedPreferenceに保存
-    List<String> alarmInfo = List<String>.empty();
+    List<String> alarmInfo = [];
     for (var element in alarms) {
       alarmInfo.add(element.exportSettings());
     }
@@ -48,7 +48,7 @@ class AlarmFactory{
   }
 
   Future<void> getPreference() async { //sharedPreferanceから取得
-    List<String>? temp = List<String>.empty();
+    List<String>? temp = [];
     final prefs = await SharedPreferences.getInstance();
     temp = prefs.getStringList('alarms');
     if(temp != null) {
@@ -56,7 +56,7 @@ class AlarmFactory{
         final List<String> l = List<String>.from(json.decode(element));
         //このメソッドを使うときはalarmsが空の前提
         alarms.add(MyAlarm(
-            int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), l[3]));
+            int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), int.parse(l[3])));
       }
       sortAlarm();
     }

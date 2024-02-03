@@ -14,7 +14,7 @@ class ringScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _ss = MediaQuery.of(context).size;//画面サイズを取得
+    var ss = MediaQuery.of(context).size;//画面サイズを取得
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
@@ -24,24 +24,24 @@ class ringScreen extends StatelessWidget {
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: _ss.height,
+              height: ss.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     // 外側の余白（マージン）
-                    margin: EdgeInsets.all(_ss.height*0.04),
-                    child:  Text('${myAlarm.hour}:${myAlarm.min}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: _ss.height*0.16)),
+                    margin: EdgeInsets.all(ss.height*0.04),
+                    child:  Text('${myAlarm.hour}:${myAlarm.min}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.16)),
                   ),
                   Container(
                     width: double.infinity,
-                    height: _ss.height*0.4,
+                    height: ss.height*0.4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            fixedSize: Size(_ss.height*0.3, _ss.height*0.1),
+                            fixedSize: Size(ss.height*0.3, ss.height*0.1),
                             backgroundColor: Colors.green[600],
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
@@ -51,12 +51,12 @@ class ringScreen extends StatelessWidget {
                           onPressed: () {//stop
                             myAlarm.stopAlarm();
                           },
-                          child: Text('Stop', style: TextStyle(fontSize: _ss.height*0.05)),
+                          child: Text('Stop', style: TextStyle(fontSize: ss.height*0.05)),
                         ),
                         OutlinedButton(
                           onPressed: () {//snooze
                             myAlarm.stopAlarm();
-                            myAlarm.snooze();
+                            myAlarm.snooze(1); //FIXME スヌーズを何分後にならすか
                             Alarm.ringStream.stream.listen(
                                   (alarmSettings) => Navigator.push(
                                 context,
