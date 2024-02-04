@@ -25,7 +25,7 @@ class AlarmFactory{
   MyAlarm createAlarms( int hour,  //新しいalarmを作成
                      int min,
                      int audioNum){
-    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum);
+    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
@@ -53,10 +53,10 @@ class AlarmFactory{
     temp = prefs.getStringList('alarms');
     if(temp != null) {
       for (var element in temp) {
-        final List<String> l = List<String>.from(json.decode(element));
+        final List<int> l = List<int>.from(json.decode(element));
         //このメソッドを使うときはalarmsが空の前提
         alarms.add(MyAlarm(
-            int.parse(l[0]), int.parse(l[1]), int.parse(l[2]), int.parse(l[3])));
+            l[0], l[1], l[2], l[3], l[4]));
       }
       sortAlarm();
     }

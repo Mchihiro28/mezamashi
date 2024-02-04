@@ -6,14 +6,17 @@ class MyAlarm{
   int id = -1; //alarmごとに固有のid
   int hour = 12;//鳴る時間
   int min = 0;//鳴る分
-  String assetAudio = "sounds/1_default.mp3";//音源へのパス
+  String assetAudio = "assets/sounds/1_default.mp3";//音源へのパス
   String audioName ="アラーム1";
   double fadeDuration = 0;//音量をフェードする時間
+  int audioNum = 0; //アラーム音の番号
+  int isValid = 0; //1(false)or0(true)
 
   MyAlarm(int id, //constructor
           this.hour,
           this.min,
-          int audioNum){
+          this.audioNum,
+          this.isValid){
     if(id < 1){ //idが-1なら新規に発行
       var random = math.Random();
       this.id = random.nextInt(1000000);
@@ -23,22 +26,23 @@ class MyAlarm{
 
     switch(audioNum) {
       case 1:
-        assetAudio = 'sounds/1_default.mp3';
+        assetAudio = 'assets/sounds/1_default.mp3';
         audioName = "アラーム1";
         break;
       case 2:
-        assetAudio = 'sounds/2_slow.mp3';
+        assetAudio = 'assets/sounds/2_slow.mp3';
         audioName = "アラーム2";
         break;
       case 3:
-        assetAudio = 'sounds/3_classic.mp3';
+        assetAudio = 'assets/sounds/3_classic.mp3';
         audioName = "アラーム3";
         break;
       default:
         audioName = "アラーム1";
-        assetAudio = 'sounds/1_default.mp3';
+        assetAudio = 'assets/sounds/1_default.mp3';
         break;
     }
+
   }
 
 
@@ -87,7 +91,8 @@ class MyAlarm{
     res.add(id.toString());
     res.add(hour.toString());
     res.add(min.toString());
-    res.add(assetAudio.toString());
+    res.add(audioNum.toString());
+    res.add(isValid.toString());
     return res.toString();
   }
 }

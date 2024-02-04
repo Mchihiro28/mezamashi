@@ -23,7 +23,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
    TimeOfDay selectedTime = TimeOfDay.now();
-   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, 1);
+   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, 1, 0);
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
      initialTime: selectedTime,
@@ -80,6 +80,11 @@ class alarmListScreenState extends State<alarmListScreen>{
             child: ListView.builder(
               itemCount: af.alarms.length,
               itemBuilder: (context, index) {
+                if(af.alarms[index].isValid == 1){
+                  switchValue = false;
+                }else{
+                  switchValue = true;
+                }
                 return Container(
                   //listの要素コンテナ
                   height: ss.height*0.08,

@@ -1,6 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:mezamashi/MyAlarm.dart';
+import 'package:mezamashi/alarmListScreen.dart';
 import 'AlarmFactory.dart';
 
 class ringScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class ringScreen extends StatelessWidget {
   final AlarmFactory af = AlarmFactory();
   final MyAlarm myAlarm;
 
-  ringScreen({required this.myAlarm, Key? key}) : super(key: key);
+  ringScreen({required this.myAlarm, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,10 @@ class ringScreen extends StatelessWidget {
                           ),
                           onPressed: () {//stop
                             myAlarm.stopAlarm();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const alarmListScreen()),
+                            );
                           },
                           child: Text('Stop', style: TextStyle(fontSize: ss.height*0.05)),
                         ),
@@ -62,6 +67,10 @@ class ringScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(builder: (context) => ringScreen(myAlarm: myAlarm)),
                               ),
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const alarmListScreen()),
                             );
                           },
                           style: OutlinedButton.styleFrom(
