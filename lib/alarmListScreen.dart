@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:alarm/alarm.dart';
+import 'package:alarm/service/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mezamashi/MyAlarm.dart';
 import 'package:mezamashi/ringScreen.dart';
@@ -19,7 +22,43 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
  bool switchValue = false;
+ bool isInitStream = false;
+ late List<AlarmSettings> alarms;
+ StreamSubscription<AlarmSettings>? subscription; //alarmが鳴ったことをlistenするstream
 
+ @override
+ void initState() {
+   super.initState();
+   AlarmStorage.init();
+   setStream(); //アプリの起動時に一回だけ呼ぶ
+ }
+
+ void setStream(){ //streamをセットする関数
+   if(isInitStream == false) {
+     subscription ??= Alarm.ringStream.stream.listen(
+           (alarmSettings) => navigateToRingScreen(alarmSettings),
+     );
+     isInitStream = true;
+   }
+ }
+
+
+ @override
+ void dispose() { //lifecycle
+   subscription?.cancel();
+   isInitStream = false;
+   super.dispose();
+ }
+
+ Future<void> navigateToRingScreen(AlarmSettings alarmSettings) async {
+   await Navigator.push(
+       context,
+       MaterialPageRoute(
+         builder: (context) =>
+             ringScreen(alarmSettings: alarmSettings),
+       ));
+
+ }
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
    TimeOfDay selectedTime = TimeOfDay.now();
@@ -37,7 +76,7 @@ class alarmListScreenState extends State<alarmListScreen>{
    final int? selectedAudio = await showDialog<int>(
        context: context,
        builder: (_) {
-         return SimpleDialogSample();
+         return const SimpleDialogSample();
        });
 
 
@@ -45,13 +84,6 @@ class alarmListScreenState extends State<alarmListScreen>{
       selectedTime = picked;
       ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
       af.setPreference();
-
-      Alarm.ringStream.stream.listen(
-            (alarmSettings) => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ringScreen(myAlarm: ma)),
-        ),
-      );
     });
  }
 
@@ -107,12 +139,6 @@ class alarmListScreenState extends State<alarmListScreen>{
                               switchValue = value;
                               if(switchValue){
                                 af.alarms[index].createAlarm();
-                                Alarm.ringStream.stream.listen(
-                                      (alarmSettings) => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ringScreen(myAlarm : af.alarms[index])),
-                                  ),
-                                );
                               }else{
                                 af.alarms[index].stopAlarm();
                               }

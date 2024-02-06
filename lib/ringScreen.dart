@@ -1,6 +1,5 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:mezamashi/MyAlarm.dart';
 import 'package:mezamashi/alarmListScreen.dart';
 import 'AlarmFactory.dart';
 
@@ -9,9 +8,9 @@ class ringScreen extends StatelessWidget {
   //TODO　スヌーズボタン　解除ボタン（パズル）　現在時刻
 
   final AlarmFactory af = AlarmFactory();
-  final MyAlarm myAlarm;
+  final AlarmSettings alarmSettings;
 
-  ringScreen({required this.myAlarm, super.key});
+  ringScreen({required this.alarmSettings, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class ringScreen extends StatelessWidget {
                   Container(
                     // 外側の余白（マージン）
                     margin: EdgeInsets.all(ss.height*0.04),
-                    child:  Text('${myAlarm.hour}:${myAlarm.min}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.16)),
+                    child:  Text('${alarmSettings.dateTime.hour}:${alarmSettings.dateTime.minute}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.16)),
                   ),
                   Container(
                     width: double.infinity,
@@ -50,28 +49,26 @@ class ringScreen extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {//stop
-                            myAlarm.stopAlarm();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const alarmListScreen()),
-                            );
+                            Alarm.stop(alarmSettings.id).then((_) => Navigator.pop(context));
                           },
                           child: Text('Stop', style: TextStyle(fontSize: ss.height*0.05)),
                         ),
                         OutlinedButton(
                           onPressed: () {//snooze
-                            myAlarm.stopAlarm();
-                            myAlarm.snooze(1); //FIXME スヌーズを何分後にならすか
-                            Alarm.ringStream.stream.listen(
-                                  (alarmSettings) => Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ringScreen(myAlarm: myAlarm)),
+                            final now = DateTime.now();
+                            Alarm.set(
+                              alarmSettings: alarmSettings.copyWith(
+                                dateTime: DateTime(
+                                  now.year,
+                                  now.month,
+                                  now.day,
+                                  now.hour,
+                                  now.minute,
+                                  0,
+                                  0,
+                                ).add(const Duration(minutes: 1)),//FIXME スヌーズを何分後にならすか
                               ),
-                            );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const alarmListScreen()),
-                            );
+                            ).then((_) => Navigator.pop(context));
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.green[600],

@@ -38,7 +38,7 @@ class AlarmFactory{
     setPreference();
   }
 
-  Future<void> setPreference() async { //sharedPreferenceに保存
+  Future<void> setPreference() async { //sharedPreferenceに保存 => packageの方ですでに保存されてるっぽい
     List<String> alarmInfo = [];
     for (var element in alarms) {
       alarmInfo.add(element.exportSettings());
@@ -49,12 +49,13 @@ class AlarmFactory{
 
   Future<void> getPreference() async { //sharedPreferanceから取得
     List<String>? temp = [];
+    alarms.clear();
     final prefs = await SharedPreferences.getInstance();
     temp = prefs.getStringList('alarms');
     if(temp != null) {
       for (var element in temp) {
+        print(element); //DEBUG
         final List<int> l = List<int>.from(json.decode(element));
-        //このメソッドを使うときはalarmsが空の前提
         alarms.add(MyAlarm(
             l[0], l[1], l[2], l[3], l[4]));
       }
