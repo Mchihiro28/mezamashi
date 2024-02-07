@@ -31,7 +31,7 @@ class ringScreen extends StatelessWidget {
                   Container(
                     // 外側の余白（マージン）
                     margin: EdgeInsets.all(ss.height*0.04),
-                    child:  Text('${alarmSettings.dateTime.hour}:${alarmSettings.dateTime.minute}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.16)),
+                    child:  Text('${alarmSettings.dateTime.hour.toString().padLeft(2, '0')}:${alarmSettings.dateTime.minute.toString().padLeft(2, '0')}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.12)),
                   ),
                   Container(
                     width: double.infinity,

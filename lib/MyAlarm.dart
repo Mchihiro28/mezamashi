@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 class MyAlarm{
   //Alarm機能を実現するクラス。AlarmControllerによってインスタンスが生成される
-  int id = -1; //alarmごとに固有のid
+  int? id; //alarmごとに固有のid
   int hour = 12;//鳴る時間
   int min = 0;//鳴る分
   String assetAudio = "assets/sounds/1_default.mp3";//音源へのパス
@@ -12,16 +12,17 @@ class MyAlarm{
   int audioNum = 0; //アラーム音の番号
   int isValid = 0; //1(false)or0(true)
 
+
   MyAlarm(int id, //constructor
           this.hour,
           this.min,
           this.audioNum,
           this.isValid){
-    if(id < 1){ //idが-1なら新規に発行
+    if((id < 1) || (this.id == null)){ //idが-1なら新規に発行
       var random = math.Random();
       this.id = random.nextInt(1000000);
     }else{//そうでないならすでにあるものを適用
-      id = this.id;
+      id = this.id!;
     }
 
     switch(audioNum) {
@@ -57,7 +58,7 @@ class MyAlarm{
 
   void createAlarm(){//アラームを作成する
     final alarmSettings = AlarmSettings(
-      id: id,
+      id: id!,
       dateTime: formatDateTime(hour, min),
       assetAudioPath: assetAudio,
       loopAudio: true,
@@ -83,7 +84,7 @@ class MyAlarm{
   }
 
   void stopAlarm(){ //alarmを停止＆削除する
-    Alarm.stop(id);
+    Alarm.stop(id!);
   }
 
   String exportSettings(){ //sharedprefarence用にlistでエクスポート
@@ -95,4 +96,5 @@ class MyAlarm{
     res.add(isValid.toString());
     return res.toString();
   }
+
 }

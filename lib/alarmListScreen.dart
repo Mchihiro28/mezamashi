@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:alarm/alarm.dart';
 import 'package:alarm/service/storage.dart';
 import 'package:flutter/material.dart';
-import 'package:mezamashi/MyAlarm.dart';
 import 'package:mezamashi/ringScreen.dart';
 
 import 'AlarmFactory.dart';
@@ -30,6 +29,7 @@ class alarmListScreenState extends State<alarmListScreen>{
  void initState() {
    super.initState();
    AlarmStorage.init();
+   af.getPreference();
    setStream(); //アプリの起動時に一回だけ呼ぶ
  }
 
@@ -62,7 +62,6 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
    TimeOfDay selectedTime = TimeOfDay.now();
-   MyAlarm ma = MyAlarm(-1, selectedTime.hour, selectedTime.minute, 1, 0);
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
      initialTime: selectedTime,
@@ -82,7 +81,7 @@ class alarmListScreenState extends State<alarmListScreen>{
 
    setState(() {
       selectedTime = picked;
-      ma = af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
+      af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
       af.setPreference();
     });
  }
@@ -127,7 +126,7 @@ class alarmListScreenState extends State<alarmListScreen>{
                     // 横に並べる
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text("${af.alarms[index].hour} : ${af.alarms[index].min}",  //時刻
+                      Text("${af.alarms[index].hour.toString().padLeft(2, '0')} : ${af.alarms[index].min.toString().padLeft(2, '0')}",  //時刻
                           style: TextStyle(fontSize: ss.height*0.03)),
                       Transform.scale(
                           scale:1.0,
@@ -138,8 +137,10 @@ class alarmListScreenState extends State<alarmListScreen>{
                             onChanged: (value){setState(() {
                               switchValue = value;
                               if(switchValue){
+                                af.alarms[index].isValid = 0;
                                 af.alarms[index].createAlarm();
                               }else{
+                                af.alarms[index].isValid = 1;
                                 af.alarms[index].stopAlarm();
                               }
                             });},

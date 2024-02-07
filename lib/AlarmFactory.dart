@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'MyAlarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'dart:math' as math;
 
 class AlarmFactory{
   //MyAlarmクラスのインスタンスを生成、管理するクラス
@@ -56,6 +57,10 @@ class AlarmFactory{
       for (var element in temp) {
         print(element); //DEBUG
         final List<int> l = List<int>.from(json.decode(element));
+        if(l[0] < 1){
+          var random = math.Random();
+          l[0] = random.nextInt(1000000);
+        }
         alarms.add(MyAlarm(
             l[0], l[1], l[2], l[3], l[4]));
       }
