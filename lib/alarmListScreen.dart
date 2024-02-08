@@ -103,7 +103,7 @@ class alarmListScreenState extends State<alarmListScreen>{
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           SizedBox.square(dimension: ss.height*0.06,),
-          Text('アラーム一覧', style: TextStyle(fontSize: ss.height*0.025)),
+          Text('アラーム', style: TextStyle(fontSize: ss.height*0.025)),
           Container(
             height: ss.height*0.8,
             padding: const EdgeInsets.all(4),

@@ -20,7 +20,7 @@ class MyAlarm{
           this.isValid){
     if((id < 1) || (this.id == null)){ //idが-1なら新規に発行
       var random = math.Random();
-      this.id = random.nextInt(1000000);
+      this.id = random.nextInt(2100000000);
     }else{//そうでないならすでにあるものを適用
       id = this.id!;
     }
@@ -51,7 +51,7 @@ class MyAlarm{
     DateTime now = DateTime.now();
     DateTime res = DateTime(now.year, now.month, now.day, h, m);
     if(res.isBefore(now)){
-      res.add(const Duration(days:1));
+      res = res.add(const Duration(days:1));
     }
     return res;
   }
