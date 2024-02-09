@@ -4,8 +4,9 @@ import 'package:alarm/alarm.dart';
 import 'package:alarm/service/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mezamashi/ringScreen.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'AlarmFactory.dart';
+import 'MyAlarm.dart';
 import 'SimpleDialog.dart';
 
 class alarmListScreen extends StatefulWidget{
@@ -30,6 +31,9 @@ class alarmListScreenState extends State<alarmListScreen>{
    super.initState();
    AlarmStorage.init();
    af.getPreference();
+   if (Alarm.android) {
+     checkAndroidNotificationPermission();
+   }
    setStream(); //アプリの起動時に一回だけ呼ぶ
  }
 
@@ -86,13 +90,46 @@ class alarmListScreenState extends State<alarmListScreen>{
     });
  }
 
+ Future<void> checkAndroidNotificationPermission() async {
+   final status = await Permission.notification.status;
+   if (status.isDenied) {
+     alarmPrint('Requesting notification permission...');
+     final res = await Permission.notification.request();
+     alarmPrint(
+       'Notification permission ${res.isGranted ? '' : 'not'} granted.',
+     );
+   }
+ }
+
+ Future<void> checkAndroidExternalStoragePermission() async {
+   final status = await Permission.storage.status;
+   if (status.isDenied) {
+     alarmPrint('Requesting external storage permission...');
+     final res = await Permission.storage.request();
+     alarmPrint(
+       'External storage permission ${res.isGranted ? '' : 'not'} granted.',
+     );
+   }
+ }
+
+ void checkIdValidance(){
+   for (var element in af.alarms) {
+     if(element.id! < 0){
+       print("the Alarm Id of ${element.id} is not vaild!");
+     }
+   }
+ }
+
+
  @override
   Widget build(BuildContext context) {
    var ss = MediaQuery.of(context).size;
+
   return MaterialApp(
     title: 'alarm',
     theme: ThemeData(primarySwatch: Colors.blue),
     home: Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
             createNewAlarm(context)
