@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:mezamashi/ringScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'AlarmFactory.dart';
-import 'MyAlarm.dart';
 import 'SimpleDialog.dart';
 
 class alarmListScreen extends StatefulWidget{
@@ -27,10 +26,10 @@ class alarmListScreenState extends State<alarmListScreen>{
  StreamSubscription<AlarmSettings>? subscription; //alarmが鳴ったことをlistenするstream
 
  @override
- void initState() {
+ initState(){
    super.initState();
+   reBuild();
    AlarmStorage.init();
-   af.getPreference();
    if (Alarm.android) {
      checkAndroidNotificationPermission();
    }
@@ -112,19 +111,15 @@ class alarmListScreenState extends State<alarmListScreen>{
    }
  }
 
- void checkIdValidance(){
-   for (var element in af.alarms) {
-     if(element.id! < 0){
-       print("the Alarm Id of ${element.id} is not vaild!");
-     }
-   }
+ Future<void> reBuild() async{
+   await af.getPreference();
+   setState((){ });
  }
 
 
  @override
   Widget build(BuildContext context) {
    var ss = MediaQuery.of(context).size;
-
   return MaterialApp(
     title: 'alarm',
     theme: ThemeData(primarySwatch: Colors.blue),

@@ -9,9 +9,7 @@ class AlarmFactory{
   //TODO firebaseかsharedpreferanceにアラームの中身を保存する
   List<MyAlarm> alarms = []; //作ったアラームのインスタンスを格納するリスト
 
-  AlarmFactory(){
-    getPreference();
-  }
+  AlarmFactory();
 
 
   void sortAlarm(){ //alarmを時刻順に並び替える
