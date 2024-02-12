@@ -38,6 +38,7 @@ dependencies:
   alarm: ^3.0.7
   shared_preferences: ^2.0.13
   permission_handler: ^11.1.0
+  volume_controller: ^2.0.7
 
 dev_dependencies:
   flutter_test:

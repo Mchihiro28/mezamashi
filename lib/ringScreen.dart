@@ -1,16 +1,39 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:mezamashi/alarmListScreen.dart';
 import 'AlarmFactory.dart';
+import 'package:volume_controller/volume_controller.dart';
 
-class ringScreen extends StatelessWidget {
+class ringScreen extends StatefulWidget {
+  final AlarmSettings alarmSettings;
+  const ringScreen({required this.alarmSettings, super.key});
+  @override
+  ringScreenState createState() => ringScreenState();
+}
+
+class ringScreenState extends State<ringScreen>{
   //アラームが鳴ったときに表示される画面
-  //TODO　スヌーズボタン　解除ボタン（パズル）　現在時刻
+  //TODO　解除ボタン（パズル）
 
   final AlarmFactory af = AlarmFactory();
-  final AlarmSettings alarmSettings;
+  double orgVolume = 0; //音量を変える前の大きさ
 
-  ringScreen({required this.alarmSettings, super.key});
+  @override
+  void initState() {
+    super.initState();
+    myGetVolume();
+  }
+
+  @override
+  void dispose() {
+    VolumeController().setVolume(orgVolume);
+    super.dispose();
+  }
+
+  Future<void> myGetVolume() async {
+    orgVolume = await VolumeController().getVolume();
+    VolumeController().setVolume(0.5); //FIXME 音量の調節
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +54,7 @@ class ringScreen extends StatelessWidget {
                   Container(
                     // 外側の余白（マージン）
                     margin: EdgeInsets.all(ss.height*0.04),
-                    child:  Text('${alarmSettings.dateTime.hour.toString().padLeft(2, '0')}:${alarmSettings.dateTime.minute.toString().padLeft(2, '0')}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.12)),
+                    child:  Text('${widget.alarmSettings.dateTime.hour.toString().padLeft(2, '0')}:${widget.alarmSettings.dateTime.minute.toString().padLeft(2, '0')}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: ss.height*0.12)),
                   ),
                   Container(
                     width: double.infinity,
@@ -49,7 +72,7 @@ class ringScreen extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {//stop
-                            Alarm.stop(alarmSettings.id).then((_) => Navigator.pop(context));
+                            Alarm.stop(widget.alarmSettings.id).then((_) => Navigator.pop(context));
                           },
                           child: Text('Stop', style: TextStyle(fontSize: ss.height*0.05)),
                         ),
@@ -57,7 +80,7 @@ class ringScreen extends StatelessWidget {
                           onPressed: () {//snooze
                             final now = DateTime.now();
                             Alarm.set(
-                              alarmSettings: alarmSettings.copyWith(
+                              alarmSettings: widget.alarmSettings.copyWith(
                                 dateTime: DateTime(
                                   now.year,
                                   now.month,
