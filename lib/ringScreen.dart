@@ -20,7 +20,8 @@ class ringScreenState extends State<ringScreen>{
   @override
   void initState() {
     super.initState();
-    myGetVolume();
+    _getVolume();
+    _delay();
   }
 
   @override
@@ -29,9 +30,14 @@ class ringScreenState extends State<ringScreen>{
     super.dispose();
   }
 
-  Future<void> myGetVolume() async {
+  Future<void> _getVolume() async {
     orgVolume = await VolumeController().getVolume();
-    VolumeController().setVolume(0.5); //FIXME 音量の調節
+    VolumeController().setVolume(1.0); //FIXME 音量の調節
+  }
+
+  Future<void> _delay() async { //30分後に止める
+    await Future.delayed(const Duration(seconds: 1800));
+    Alarm.stop(widget.alarmSettings.id).then((_) => Navigator.pop(context));
   }
 
 
