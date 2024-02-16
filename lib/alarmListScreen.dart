@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mezamashi/ringScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'AlarmFactory.dart';
+import 'ManagePoint.dart';
 import 'SimpleDialog.dart';
 
 class alarmListScreen extends StatefulWidget{
@@ -20,6 +21,7 @@ class alarmListScreen extends StatefulWidget{
 class alarmListScreenState extends State<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
+ static final ManagePoint mp = ManagePoint.getInstance();
  bool switchValue = false;
  bool isInitStream = false;
  late List<AlarmSettings> alarms;
@@ -37,6 +39,7 @@ class alarmListScreenState extends State<alarmListScreen>{
  }
 
  void setStream(){ //streamをセットする関数
+   mp.addPoint(1); //ログインボーナス1pt
    if(isInitStream == false) {
      subscription ??= Alarm.ringStream.stream.listen(
            (alarmSettings) => navigateToRingScreen(alarmSettings),

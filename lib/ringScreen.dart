@@ -1,5 +1,6 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:mezamashi/ManagePoint.dart';
 import 'AlarmFactory.dart';
 import 'package:volume_controller/volume_controller.dart';
 
@@ -15,6 +16,7 @@ class ringScreenState extends State<ringScreen>{
   //TODO　解除ボタン（パズル）
 
   final AlarmFactory af = AlarmFactory();
+  static final ManagePoint mp = ManagePoint.getInstance();
   double orgVolume = 0; //音量を変える前の大きさ
 
   @override
@@ -78,6 +80,13 @@ class ringScreenState extends State<ringScreen>{
                             ),
                           ),
                           onPressed: () {//stop
+                            int diff = DateTime.now().difference(widget.alarmSettings.dateTime).inSeconds;
+                            diff -= 15; //アラームを止めるまでの猶予秒数
+                            if(diff > 0){
+                              mp.addPoint(diff * 10);
+                            }else{
+                              mp.addPoint(-10);
+                            }
                             Alarm.stop(widget.alarmSettings.id).then((_) => Navigator.pop(context));
                           },
                           child: Text('Stop', style: TextStyle(fontSize: ss.height*0.05)),
@@ -85,6 +94,7 @@ class ringScreenState extends State<ringScreen>{
                         OutlinedButton(
                           onPressed: () {//snooze
                             final now = DateTime.now();
+                            mp.addPoint(-30); //ポイント変動：スヌーズするたびに-30pt
                             Alarm.set(
                               alarmSettings: widget.alarmSettings.copyWith(
                                 dateTime: DateTime(
