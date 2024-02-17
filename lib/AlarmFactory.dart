@@ -55,7 +55,6 @@ class AlarmFactory{
     temp = prefs.getStringList('alarms');
     if(temp != null) {
       for (var element in temp) {
-        print(element); //DEBUG
         final List<int> l = List<int>.from(json.decode(element));
         if(l[0] < 1){
           var random = math.Random();

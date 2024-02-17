@@ -88,13 +88,13 @@ class MyAlarm{
   }
 
   String exportSettings(){ //sharedprefarence用にlistでエクスポート
-    List<String> res = [];
-    res.add(id.toString());
-    res.add(hour.toString());
-    res.add(min.toString());
-    res.add(audioNum.toString());
-    res.add(isValid.toString());
-    return res.toString();
+      List<String> res = [];
+      res.add(id.toString());
+      res.add(hour.toString());
+      res.add(min.toString());
+      res.add(audioNum.toString());
+      res.add(isValid.toString());
+      return res.toString();
   }
 
 }

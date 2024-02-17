@@ -1,7 +1,7 @@
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
 
-  static ManagePoint mp = ManagePoint();
+  static final ManagePoint mp = ManagePoint();
   int point = 0;
 
   static ManagePoint getInstance() => mp; //singleton
