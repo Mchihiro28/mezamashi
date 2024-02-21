@@ -6,17 +6,20 @@ import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper{
 
-  static final _databaseName = "MyDatabase.db"; // DB名
-  static final _databaseVersion = 1; // スキーマのバージョン指定
+  static const _databaseName = "MyDatabase.db"; // DB名
+  static const _databaseVersion = 1; // スキーマのバージョン指定
 
-  static const table = 'my_table'; // テーブル名
+  static const alarmTable = 'alarm_table'; // テーブル名
+  static const pointTable = 'point_table'; // テーブル名
 
-  static const columnId = '_id'; // カラム名：ID
+  static const columnAId = 'a_id'; // カラム名：ID
   static const columnAlarmId = 'alarm_id'; // カラム名:alarm_id
   static const columnHour = 'hour'; // カラム名:hour
   static const columnMin = 'min'; // カラム名:min
   static const columnAudioNum = 'audio_num'; // カラム名:audio_num
   static const columnValid = 'validity'; // カラム名:validity
+
+  static const columnPId = 'p_id'; // カラム名：ID
   static const columnPoint = 'point'; // カラム名：point
 
   // DatabaseHelper クラスを定義
@@ -57,16 +60,105 @@ class DatabaseHelper{
   // スキーマーのバージョンはテーブル変更時にバージョンを上げる（テーブル・カラム追加・変更・削除など）
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE $table (
-            $columnId INTEGER PRIMARY KEY,
+          CREATE TABLE $alarmTable (
+            $columnAId INTEGER PRIMARY KEY,
             $columnAlarmId INTEGER NOT NULL,
             $columnHour INTEGER NOT NULL,
             $columnMin INTEGER NOT NULL,
             $columnAudioNum INTEGER NOT NULL,
-            $columnValid INTEGER NOT NULL,
+            $columnValid INTEGER NOT NULL.
+          )
+          ''');
+    await db.execute('''
+          CREATE TABLE $pointTable (
+            $columnPId INTEGER PRIMARY KEY,
             $columnPoint INTEGER NOT NULL.
           )
           ''');
   }
 
+  // 登録処理
+  Future<int> insert(String tableName, Map<String, dynamic> row) async {
+    if((tableName == alarmTable) || (tableName == pointTable)){
+      throw Exception("table name is not valid!");
+    }
+    Database? db = await instance.database;
+    return await db!.insert(tableName, row);
+  }
+
+  // 照会処理
+  Future<List<Map<String, dynamic>>> queryAllRows(String tableName) async {
+    if((tableName == alarmTable) || (tableName == pointTable)){
+      throw Exception("table name is not valid!");
+    }
+    Database? db = await instance.database;
+    return await db!.query(tableName);
+  }
+
+  // レコード数を確認
+  Future<int?> queryRowCount(String tableName, ) async {
+    if((tableName == alarmTable) || (tableName == pointTable)){
+      throw Exception("table name is not valid!");
+    }
+    Database? db = await instance.database;
+    return Sqflite.firstIntValue(await db!.rawQuery('SELECT COUNT(*) FROM $tableName'));
+  }
+
+  //　更新処理
+  Future<int> update(String tableName, Map<String, dynamic> row) async {
+    if((tableName == alarmTable) || (tableName == pointTable)){
+      throw Exception("table name is not valid!");
+    }
+    Database? db = await instance.database;
+    String columnId;
+    int id;
+    if(tableName == alarmTable){
+      columnId = columnAId;
+      id = row[columnAId];
+    }else{
+      columnId = columnPId;
+      id = row[columnPId];
+    }
+    return await db!.update(tableName, row, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  //　削除処理
+  Future<int> delete(String tableName, int id) async {
+    if((tableName == alarmTable) || (tableName == pointTable)){
+      throw Exception("table name is not valid!");
+    }
+    Database? db = await instance.database;
+    String columnId;
+    if(tableName == alarmTable){
+      columnId = columnAId;
+    }else{
+      columnId = columnPId;
+    }
+    return await db!.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  Map<String, dynamic> toAlarmMap({required int id,
+                                   required int alarmId,
+                                   required int hour,
+                                   required int min,
+                                   required int an,
+                                   required int valid,
+                                   required int point}){
+    return {
+      DatabaseHelper.columnAId : id,
+      DatabaseHelper.columnAlarmId  : alarmId,
+      DatabaseHelper.columnHour  : hour,
+      DatabaseHelper.columnMin  : min,
+      DatabaseHelper.columnAudioNum  : an,
+      DatabaseHelper.columnValid  : valid,
+      DatabaseHelper.columnPoint  : point,
+    };
+  }
+
+  Map<String, dynamic> toPointMap({required int id, required int point,}){
+    return {
+      DatabaseHelper.columnAId : id,
+      DatabaseHelper.columnPoint  : point,
+    };
+  }
 }
