@@ -24,7 +24,7 @@ class AlarmFactory{
   MyAlarm createAlarms( int hour,  //新しいalarmを作成
                      int min,
                      int audioNum){
-    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0);
+    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0, -1);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
@@ -39,7 +39,7 @@ class AlarmFactory{
     }
   }
 
-  Future<void> setPreference() async { //sharedPreferenceに保存 => packageの方ですでに保存されてるっぽい
+  Future<void> setPreference() async { //sharedPreferenceに保存 => 一応packageの方ですでに保存されてる
     List<String> alarmInfo = [];
     for (var element in alarms) {
       alarmInfo.add(element.exportSettings());
@@ -61,7 +61,7 @@ class AlarmFactory{
           l[0] = random.nextInt(1000000);
         }
         alarms.add(MyAlarm(
-            l[0], l[1], l[2], l[3], l[4]));
+            l[0], l[1], l[2], l[3], l[4], l[5]));
       }
       sortAlarm();
     }

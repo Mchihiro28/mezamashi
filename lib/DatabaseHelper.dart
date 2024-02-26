@@ -78,34 +78,28 @@ class DatabaseHelper{
   }
 
   // 登録処理
-  Future<int> insert(String tableName, Map<String, dynamic> row) async {
+  static Future<int> insert(String tableName, Map<String, dynamic> row) async {
     if((tableName == alarmTable) || (tableName == pointTable)){
       throw Exception("table name is not valid!");
     }
     Database? db = await instance.database;
-    return await db!.insert(tableName, row);
+    return await db!.insert(tableName, row, conflictAlgorithm: ConflictAlgorithm.replace,);
   }
 
   // 照会処理
-  Future<List<Map<String, dynamic>>> queryAllRows(String tableName) async {
-    if((tableName == alarmTable) || (tableName == pointTable)){
-      throw Exception("table name is not valid!");
-    }
+  static Future<List<Map<String, dynamic>>> query(String query) async {
     Database? db = await instance.database;
-    return await db!.query(tableName);
+    return await db!.rawQuery(query);
   }
 
   // レコード数を確認
-  Future<int?> queryRowCount(String tableName, ) async {
-    if((tableName == alarmTable) || (tableName == pointTable)){
-      throw Exception("table name is not valid!");
-    }
+  static Future<int?> queryCount(String query) async {
     Database? db = await instance.database;
-    return Sqflite.firstIntValue(await db!.rawQuery('SELECT COUNT(*) FROM $tableName'));
+    return Sqflite.firstIntValue(await db!.rawQuery(query));
   }
 
   //　更新処理
-  Future<int> update(String tableName, Map<String, dynamic> row) async {
+  static Future<int> update(String tableName, Map<String, dynamic> row) async {
     if((tableName == alarmTable) || (tableName == pointTable)){
       throw Exception("table name is not valid!");
     }
@@ -123,7 +117,7 @@ class DatabaseHelper{
   }
 
   //　削除処理
-  Future<int> delete(String tableName, int id) async {
+  static Future<int> delete(String tableName, int id) async {
     if((tableName == alarmTable) || (tableName == pointTable)){
       throw Exception("table name is not valid!");
     }
@@ -135,30 +129,5 @@ class DatabaseHelper{
       columnId = columnPId;
     }
     return await db!.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
-  }
-
-  Map<String, dynamic> toAlarmMap({required int id,
-                                   required int alarmId,
-                                   required int hour,
-                                   required int min,
-                                   required int an,
-                                   required int valid,
-                                   required int point}){
-    return {
-      DatabaseHelper.columnAId : id,
-      DatabaseHelper.columnAlarmId  : alarmId,
-      DatabaseHelper.columnHour  : hour,
-      DatabaseHelper.columnMin  : min,
-      DatabaseHelper.columnAudioNum  : an,
-      DatabaseHelper.columnValid  : valid,
-      DatabaseHelper.columnPoint  : point,
-    };
-  }
-
-  Map<String, dynamic> toPointMap({required int id, required int point,}){
-    return {
-      DatabaseHelper.columnAId : id,
-      DatabaseHelper.columnPoint  : point,
-    };
   }
 }
