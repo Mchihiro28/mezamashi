@@ -4,6 +4,7 @@ import 'package:alarm/alarm.dart';
 import 'package:alarm/service/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mezamashi/DatabaseHelper.dart';
+import 'package:mezamashi/MyAlarm.dart';
 import 'package:mezamashi/ringScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'AlarmFactory.dart';
@@ -92,24 +93,6 @@ class alarmListScreenState extends State<alarmListScreen>{
       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
       af.setPreference();
     });
- }
-
- Future<void> setAlarmDB() async{ //sqliteに保存
-   for (var e in af.alarms) {
-     DatabaseHelper.insert(DatabaseHelper.alarmTable,
-         {
-           DatabaseHelper.columnAId : e.sId,
-           DatabaseHelper.columnAlarmId  : e.id!,
-           DatabaseHelper.columnHour  : e.hour,
-           DatabaseHelper.columnMin  : e.min,
-           DatabaseHelper.columnAudioNum  : e.audioNum,
-           DatabaseHelper.columnValid  : e.isValid,
-         });
-   }
- }
-
- Future<void> getAlarmDB() async{ //sqliteから取得
-
  }
 
  Future<void> checkAndroidNotificationPermission() async {

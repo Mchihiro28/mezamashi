@@ -24,7 +24,7 @@ class AlarmFactory{
   MyAlarm createAlarms( int hour,  //新しいalarmを作成
                      int min,
                      int audioNum){
-    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0, -1);
+    MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
     sortAlarm();
@@ -53,6 +53,7 @@ class AlarmFactory{
     alarms.clear();
     final prefs = await SharedPreferences.getInstance();
     temp = prefs.getStringList('alarms');
+    print(temp);  //DEBUG
     if(temp != null) {
       for (var element in temp) {
         final List<int> l = List<int>.from(json.decode(element));
@@ -61,7 +62,7 @@ class AlarmFactory{
           l[0] = random.nextInt(1000000);
         }
         alarms.add(MyAlarm(
-            l[0], l[1], l[2], l[3], l[4], l[5]));
+            l[0], l[1], l[2], l[3], l[4]));
       }
       sortAlarm();
     }

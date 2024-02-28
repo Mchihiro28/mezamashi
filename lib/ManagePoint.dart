@@ -1,3 +1,6 @@
+import 'package:mezamashi/DatabaseHelper.dart';
+import 'package:sqflite/sqflite.dart';
+
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
 
@@ -36,5 +39,7 @@ class ManagePoint{
   }
 
   void addPoint(int num) => point += num;
+
+
 
 }

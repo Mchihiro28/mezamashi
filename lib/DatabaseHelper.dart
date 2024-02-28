@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:mezamashi/AlarmFactory.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'MyAlarm.dart';
 
 class DatabaseHelper{
 
@@ -13,7 +16,6 @@ class DatabaseHelper{
   static const pointTable = 'point_table'; // テーブル名
 
   static const columnAId = 'a_id'; // カラム名：ID
-  static const columnAlarmId = 'alarm_id'; // カラム名:alarm_id
   static const columnHour = 'hour'; // カラム名:hour
   static const columnMin = 'min'; // カラム名:min
   static const columnAudioNum = 'audio_num'; // カラム名:audio_num
@@ -62,7 +64,6 @@ class DatabaseHelper{
     await db.execute('''
           CREATE TABLE $alarmTable (
             $columnAId INTEGER PRIMARY KEY,
-            $columnAlarmId INTEGER NOT NULL,
             $columnHour INTEGER NOT NULL,
             $columnMin INTEGER NOT NULL,
             $columnAudioNum INTEGER NOT NULL,
@@ -129,5 +130,54 @@ class DatabaseHelper{
       columnId = columnPId;
     }
     return await db!.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  static Future<int> setPointDB(int point) async{ //pointをsqliteに保存
+    Database? db = await DatabaseHelper.instance.database;
+    return await db!.rawInsert("INSERT INTO point_table(point) VALUES($point)");
+  }
+
+  static Future<List<int>> getPointDB() async{ //pointをsqliteから取得
+    int pp = -1; //前のポイント
+    int count = 0; //何連続でポイントが上昇しているか
+    var data = await DatabaseHelper.query("SELECT * FROM point_table");
+    for(var e in data){
+      if(e['point'] > pp){
+        count += 1;
+      }else{
+        count = 0;
+      }
+      pp = e['point'];
+    }
+
+    //DEBUG
+    print(data);
+
+    return [pp, count];
+  }
+
+  static Future<void> setAlarmDB(AlarmFactory af) async{ //alarmをsqliteに保存
+    for (var e in af.alarms) {
+      DatabaseHelper.insert(DatabaseHelper.alarmTable,
+          {
+            DatabaseHelper.columnAId : e.id,
+            DatabaseHelper.columnHour  : e.hour,
+            DatabaseHelper.columnMin  : e.min,
+            DatabaseHelper.columnAudioNum  : e.audioNum,
+            DatabaseHelper.columnValid  : e.isValid,
+          });
+    }
+  }
+
+  static Future<void> getAlarmDB(AlarmFactory af) async{ //alarmをsqliteから取得
+    var data = await DatabaseHelper.query("SELECT * FROM alarm_table");
+    for(var e in data){
+      af.alarms.add(MyAlarm(int.parse(e['a_id']), int.parse(e['hour']), int.parse(e['min']), int.parse(e['audio_num']), int.parse(e['validity'])));
+    }
+    af.sortAlarm();
+
+    //DEBUG
+    print(data);
+
   }
 }

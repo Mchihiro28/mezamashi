@@ -11,20 +11,18 @@ class MyAlarm{
   double fadeDuration = 0;//音量をフェードする時間
   int audioNum = 0; //アラーム音の番号
   int isValid = 0; //1(false)or0(true)
-  int sId = -1; //sqlite用のid
 
 
   MyAlarm(int id, //constructor
           this.hour,
           this.min,
           this.audioNum,
-          this.isValid,
-          this.sId){
-    if((id < 1) || (this.id == null)){ //idが-1なら新規に発行
+          this.isValid,){
+    if(id < 1){ //idが-1なら新規に発行
       var random = math.Random();
       this.id = random.nextInt(2100000000);
     }else{//そうでないならすでにあるものを適用
-      id = this.id!;
+      this.id = id;
     }
 
     switch(audioNum) {
@@ -96,7 +94,6 @@ class MyAlarm{
       res.add(min.toString());
       res.add(audioNum.toString());
       res.add(isValid.toString());
-      res.add(sId.toString());
       return res.toString();
   }
 
