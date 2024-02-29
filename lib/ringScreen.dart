@@ -16,13 +16,14 @@ class ringScreenState extends State<ringScreen>{
   //TODO　解除ボタン（パズル）
 
   final AlarmFactory af = AlarmFactory();
-  static final ManagePoint mp = ManagePoint.getInstance();
+  late final ManagePoint mp;
   double orgVolume = 0; //音量を変える前の大きさ
 
   @override
   void initState() {
     super.initState();
     _getVolume();
+    reBuild();
     _delay();
   }
 
@@ -30,6 +31,12 @@ class ringScreenState extends State<ringScreen>{
   void dispose() {
     VolumeController().setVolume(orgVolume);
     super.dispose();
+  }
+
+  Future<void> reBuild() async{
+    await af.getPreference();
+    mp = await ManagePoint.getInstance();
+    setState((){ });
   }
 
   Future<void> _getVolume() async {
@@ -82,8 +89,8 @@ class ringScreenState extends State<ringScreen>{
                           onPressed: () {//stop
                             int diff = DateTime.now().difference(widget.alarmSettings.dateTime).inSeconds;
                             diff -= 15; //アラームを止めるまでの猶予秒数
-                            if(diff > 0){
-                              mp.addPoint(diff * 10);
+                            if(diff < 0){
+                              mp.addPoint(diff * -10);
                             }else{
                               mp.addPoint(-10);
                             }

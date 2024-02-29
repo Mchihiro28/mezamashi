@@ -23,6 +23,7 @@ class DatabaseHelper{
 
   static const columnPId = 'p_id'; // カラム名：ID
   static const columnPoint = 'point'; // カラム名：point
+  static const columnTime = 'created_at'; //カラム名：created_at (タイムスタンプ)
 
   // DatabaseHelper クラスを定義
   DatabaseHelper._privateConstructor();
@@ -67,13 +68,14 @@ class DatabaseHelper{
             $columnHour INTEGER NOT NULL,
             $columnMin INTEGER NOT NULL,
             $columnAudioNum INTEGER NOT NULL,
-            $columnValid INTEGER NOT NULL.
+            $columnValid INTEGER NOT NULL
           )
           ''');
     await db.execute('''
           CREATE TABLE $pointTable (
             $columnPId INTEGER PRIMARY KEY,
-            $columnPoint INTEGER NOT NULL.
+            $columnPoint INTEGER NOT NULL,
+            $columnTime TEXT DEFAULT CURRENT_TIMESTAMP
           )
           ''');
   }
@@ -141,6 +143,7 @@ class DatabaseHelper{
     int pp = -1; //前のポイント
     int count = 0; //何連続でポイントが上昇しているか
     var data = await DatabaseHelper.query("SELECT * FROM point_table");
+
     for(var e in data){
       if(e['point'] > pp){
         count += 1;
@@ -152,6 +155,7 @@ class DatabaseHelper{
 
     //DEBUG
     print(data);
+    print("point is $pp /count is $count");
 
     return [pp, count];
   }

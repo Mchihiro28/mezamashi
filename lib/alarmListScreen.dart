@@ -24,7 +24,7 @@ class alarmListScreen extends StatefulWidget{
 class alarmListScreenState extends State<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
- static final ManagePoint mp = ManagePoint.getInstance();
+ late final ManagePoint mp;
  bool switchValue = false;
  bool isInitStream = false;
  late List<AlarmSettings> alarms;
@@ -42,7 +42,6 @@ class alarmListScreenState extends State<alarmListScreen>{
  }
 
  void setStream(){ //streamをセットする関数
-   mp.addPoint(1); //ログインボーナス1pt
    if(isInitStream == false) {
      subscription ??= Alarm.ringStream.stream.listen(
            (alarmSettings) => navigateToRingScreen(alarmSettings),
@@ -119,6 +118,8 @@ class alarmListScreenState extends State<alarmListScreen>{
 
  Future<void> reBuild() async{
    await af.getPreference();
+   mp = await ManagePoint.getInstance();
+   mp.addPoint(1); //ログインボーナス1pt
    setState((){ });
  }
 

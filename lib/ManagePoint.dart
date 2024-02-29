@@ -3,11 +3,19 @@ import 'package:sqflite/sqflite.dart';
 
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
-
-  static final ManagePoint mp = ManagePoint();
   int point = 0;
 
-  static ManagePoint getInstance() => mp; //singleton
+  static Future<ManagePoint> getInstance()async{ //singleton
+    ManagePoint mp = ManagePoint();
+    await mp._init();
+    return mp;
+  }
+
+  Future<void> _init()async{
+    var pointInfo = await DatabaseHelper.getPointDB();
+    point = pointInfo[0];
+  }
+
 
   String applyPoint(){ //ポイント→ファイル名
     List<String> fileName = ["lv5no","lv4no","lv3no","lv2no","lv1no","lv0","lv-1","lv-2",];
@@ -38,7 +46,10 @@ class ManagePoint{
     return false;
   }
 
-  void addPoint(int num) => point += num;
+  void addPoint(int num){
+    point += num;
+    DatabaseHelper.setPointDB(point);
+  }
 
 
 
