@@ -13,7 +13,15 @@ class ManagePoint{
 
   Future<void> _init()async{
     var pointInfo = await DatabaseHelper.getPointDB();
-    point = pointInfo[0];
+    if(pointInfo[1] >= 3){
+      if(pointInfo[0] > 100){
+        point = 100;
+      }else{
+        point = 0;
+      }
+    }else{
+      point = pointInfo[0];
+    }
   }
 
 

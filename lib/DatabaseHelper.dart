@@ -75,7 +75,7 @@ class DatabaseHelper{
           CREATE TABLE $pointTable (
             $columnPId INTEGER PRIMARY KEY,
             $columnPoint INTEGER NOT NULL,
-            $columnTime TEXT DEFAULT CURRENT_TIMESTAMP
+            $columnTime TEXT DEFAULT CURRENT_DATE
           )
           ''');
   }
@@ -136,16 +136,21 @@ class DatabaseHelper{
 
   static Future<int> setPointDB(int point) async{ //pointをsqliteに保存
     Database? db = await DatabaseHelper.instance.database;
-    return await db!.rawInsert("INSERT INTO point_table(point) VALUES($point)");
+    return await db!.rawInsert("INSERT INTO $pointTable(point) VALUES($point)");
   }
 
   static Future<List<int>> getPointDB() async{ //pointをsqliteから取得
     int pp = -1; //前のポイント
     int count = 0; //何連続でポイントが上昇しているか
-    var data = await DatabaseHelper.query("SELECT * FROM point_table");
+
+    //var data = await DatabaseHelper.query("SELECT * FROM $pointTable");
+    var data = await DatabaseHelper.query(
+        '''SELECT * FROM $pointTable 
+           WHERE $columnPId IN(SELECT MAX($columnPId) 
+           FROM $pointTable GROUP BY $columnTime)''');
 
     for(var e in data){
-      if(e['point'] > pp){
+      if(pp - e['point'] >= 10){
         count += 1;
       }else{
         count = 0;
