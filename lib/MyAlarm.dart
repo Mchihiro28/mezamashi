@@ -28,18 +28,18 @@ class MyAlarm{
     switch(audioNum) {
       case 1:
         assetAudio = 'assets/sounds/1_default.mp3';
-        audioName = "アラーム1";
+        audioName = "シンプル";
         break;
       case 2:
         assetAudio = 'assets/sounds/2_slow.mp3';
-        audioName = "アラーム2";
+        audioName = "スロー";
         break;
       case 3:
         assetAudio = 'assets/sounds/3_classic.mp3';
-        audioName = "アラーム3";
+        audioName = "クラシック";
         break;
       default:
-        audioName = "アラーム1";
+        audioName = "シンプル";
         assetAudio = 'assets/sounds/1_default.mp3';
         break;
     }

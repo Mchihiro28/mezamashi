@@ -83,10 +83,11 @@ class DatabaseHelper{
   // 登録処理
   static Future<int> insert(String tableName, Map<String, dynamic> row) async {
     if((tableName == alarmTable) || (tableName == pointTable)){
+      Database? db = await instance.database;
+      return await db!.insert(tableName, row, conflictAlgorithm: ConflictAlgorithm.replace,);
+    }else{
       throw Exception("table name is not valid!");
     }
-    Database? db = await instance.database;
-    return await db!.insert(tableName, row, conflictAlgorithm: ConflictAlgorithm.replace,);
   }
 
   // 照会処理
@@ -104,34 +105,37 @@ class DatabaseHelper{
   //　更新処理
   static Future<int> update(String tableName, Map<String, dynamic> row) async {
     if((tableName == alarmTable) || (tableName == pointTable)){
+      Database? db = await instance.database;
+      String columnId;
+      int id;
+      if(tableName == alarmTable){
+        columnId = columnAId;
+        id = row[columnAId];
+      }else{
+        columnId = columnPId;
+        id = row[columnPId];
+      }
+      return await db!.update(tableName, row, where: '$columnId = ?', whereArgs: [id], conflictAlgorithm: ConflictAlgorithm.replace);
+    }else{
       throw Exception("table name is not valid!");
     }
-    Database? db = await instance.database;
-    String columnId;
-    int id;
-    if(tableName == alarmTable){
-      columnId = columnAId;
-      id = row[columnAId];
-    }else{
-      columnId = columnPId;
-      id = row[columnPId];
-    }
-    return await db!.update(tableName, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
   //　削除処理
   static Future<int> delete(String tableName, int id) async {
     if((tableName == alarmTable) || (tableName == pointTable)){
+      Database? db = await instance.database;
+      String columnId;
+      if(tableName == alarmTable){
+        columnId = columnAId;
+      }else{
+        columnId = columnPId;
+      }
+      return await db!.delete(tableName, where: '$columnId = $id');
+    }else{
       throw Exception("table name is not valid!");
     }
-    Database? db = await instance.database;
-    String columnId;
-    if(tableName == alarmTable){
-      columnId = columnAId;
-    }else{
-      columnId = columnPId;
-    }
-    return await db!.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+
   }
 
   static Future<int> setPointDB(int point) async{ //pointをsqliteに保存
@@ -167,7 +171,7 @@ class DatabaseHelper{
 
   static Future<void> setAlarmDB(AlarmFactory af) async{ //alarmをsqliteに保存
     for (var e in af.alarms) {
-      DatabaseHelper.insert(DatabaseHelper.alarmTable,
+      DatabaseHelper.insert(alarmTable,
           {
             DatabaseHelper.columnAId : e.id,
             DatabaseHelper.columnHour  : e.hour,
@@ -181,7 +185,7 @@ class DatabaseHelper{
   static Future<void> getAlarmDB(AlarmFactory af) async{ //alarmをsqliteから取得
     var data = await DatabaseHelper.query("SELECT * FROM alarm_table");
     for(var e in data){
-      af.alarms.add(MyAlarm(int.parse(e['a_id']), int.parse(e['hour']), int.parse(e['min']), int.parse(e['audio_num']), int.parse(e['validity'])));
+      af.alarms.add(MyAlarm(e['a_id'], e['hour'], e['min'], e['audio_num'], e['validity']));
     }
     af.sortAlarm();
 
