@@ -31,7 +31,7 @@ class alarmListScreenState extends State<alarmListScreen>{
  @override
  initState(){
    super.initState();
-   reBuild();
+   _reBuild();
    AlarmStorage.init();
    if (Alarm.android) {
      checkAndroidNotificationPermission();
@@ -89,8 +89,6 @@ class alarmListScreenState extends State<alarmListScreen>{
    setState(() {
       selectedTime = picked;
       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
-      af.setPreference();
-      DatabaseHelper.setAlarmDB(af);
     });
  }
 
@@ -116,8 +114,7 @@ class alarmListScreenState extends State<alarmListScreen>{
    }
  }
 
- Future<void> reBuild() async{
-   await af.getPreference();
+ Future<void> _reBuild() async{
    await DatabaseHelper.getAlarmDB(af);
    mp = await ManagePoint.getInstance();
    mp.addPoint(1); //ログインボーナス1pt
@@ -182,21 +179,12 @@ class alarmListScreenState extends State<alarmListScreen>{
                             onChanged: (value){setState(() {
                               switchValue = value;
                               if(switchValue){
-                                af.alarms[index].isValid = 0;
+                                af.changeValidity(index, 0);
                                 af.alarms[index].createAlarm();
                               }else{
-                                af.alarms[index].isValid = 1;
+                                af.changeValidity(index, 1);
                                 af.alarms[index].stopAlarm();
                               }
-                              DatabaseHelper.update(DatabaseHelper.alarmTable,
-                                  {
-                                    DatabaseHelper.columnAId : af.alarms[index].id,
-                                    DatabaseHelper.columnHour  : af.alarms[index].hour,
-                                    DatabaseHelper.columnMin  : af.alarms[index].min,
-                                    DatabaseHelper.columnAudioNum  : af.alarms[index].audioNum,
-                                    DatabaseHelper.columnValid  : af.alarms[index].isValid,
-                                  }
-                              );
                             });},
                           )
                       ),
@@ -208,7 +196,6 @@ class alarmListScreenState extends State<alarmListScreen>{
                         tooltip: '削除ボタン',
                         onPressed: () {
                           setState(() {
-                            DatabaseHelper.delete(DatabaseHelper.alarmTable, af.alarms[index].id!);
                             af.deleteAlarm(index);
                           });
                         },

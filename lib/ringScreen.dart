@@ -4,6 +4,8 @@ import 'package:mezamashi/ManagePoint.dart';
 import 'AlarmFactory.dart';
 import 'package:volume_controller/volume_controller.dart';
 
+import 'DatabaseHelper.dart';
+
 class ringScreen extends StatefulWidget {
   final AlarmSettings alarmSettings;
   const ringScreen({required this.alarmSettings, super.key});
@@ -15,7 +17,6 @@ class ringScreenState extends State<ringScreen>{
   //アラームが鳴ったときに表示される画面
   //TODO　解除ボタン（パズル）
 
-  final AlarmFactory af = AlarmFactory();
   late final ManagePoint mp;
   double orgVolume = 0; //音量を変える前の大きさ
 
@@ -23,7 +24,7 @@ class ringScreenState extends State<ringScreen>{
   void initState() {
     super.initState();
     _getVolume();
-    reBuild();
+    _reBuild();
     _delay();
   }
 
@@ -33,8 +34,7 @@ class ringScreenState extends State<ringScreen>{
     super.dispose();
   }
 
-  Future<void> reBuild() async{
-    await af.getPreference();
+  Future<void> _reBuild() async{
     mp = await ManagePoint.getInstance();
     setState((){ });
   }

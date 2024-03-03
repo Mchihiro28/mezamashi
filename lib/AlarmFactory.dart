@@ -1,12 +1,9 @@
 import 'dart:collection';
+import 'DatabaseHelper.dart';
 import 'MyAlarm.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'dart:math' as math;
 
 class AlarmFactory{
   //MyAlarmクラスのインスタンスを生成、管理するクラス
-  //TODO firebaseかsharedpreferanceにアラームの中身を保存する
   List<MyAlarm> alarms = []; //作ったアラームのインスタンスを格納するリスト
 
   AlarmFactory();
@@ -27,6 +24,7 @@ class AlarmFactory{
     MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
+    DatabaseHelper.setAlarmDB(this);
     sortAlarm();
     return customAlarm;
   }
@@ -35,37 +33,24 @@ class AlarmFactory{
     if(alarms.isNotEmpty) {
       alarms[index].stopAlarm();
       alarms.removeAt(index);
-      setPreference();
+      DatabaseHelper.delete(DatabaseHelper.alarmTable, alarms[index].id!);
     }
   }
 
-  Future<void> setPreference() async { //sharedPreferenceに保存 => 一応packageの方ですでに保存されてる
-    List<String> alarmInfo = [];
-    for (var element in alarms) {
-      alarmInfo.add(element.exportSettings());
-    }
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('alarms', alarmInfo);
-  }
+  void changeValidity(int index, int validity){ //アラームの有効性を変化させて、dbをupdateする関数
+    alarms[index].isValid = validity;
 
-  Future<void> getPreference() async { //sharedPreferanceから取得
-    List<String>? temp = [];
-    alarms.clear();
-    final prefs = await SharedPreferences.getInstance();
-    temp = prefs.getStringList('alarms');
-    print(temp);  //DEBUG
-    if(temp != null) {
-      for (var element in temp) {
-        final List<int> l = List<int>.from(json.decode(element));
-        if(l[0] < 1){
-          var random = math.Random();
-          l[0] = random.nextInt(1000000);
+    DatabaseHelper.update(DatabaseHelper.alarmTable,
+        {
+          DatabaseHelper.columnAId : alarms[index].id,
+          DatabaseHelper.columnHour  : alarms[index].hour,
+          DatabaseHelper.columnMin  : alarms[index].min,
+          DatabaseHelper.columnAudioNum  : alarms[index].audioNum,
+          DatabaseHelper.columnValid  : validity,
         }
-        alarms.add(MyAlarm(
-            l[0], l[1], l[2], l[3], l[4]));
-      }
-      sortAlarm();
-    }
+    );
   }
+
+
 
 }
