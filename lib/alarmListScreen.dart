@@ -19,7 +19,7 @@ class alarmListScreen extends StatefulWidget{
 }
 
 
-class alarmListScreenState extends State<alarmListScreen>{
+class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliveClientMixin<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
  late final ManagePoint mp;
@@ -38,6 +38,9 @@ class alarmListScreenState extends State<alarmListScreen>{
    }
    setStream(); //アプリの起動時に一回だけ呼ぶ
  }
+
+ @override //stateの保持
+ bool get wantKeepAlive => true;
 
  void setStream(){ //streamをセットする関数
    interrupt();

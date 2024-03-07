@@ -9,42 +9,21 @@ class PlantScreen extends StatefulWidget{
   PlantScreenState createState() => PlantScreenState();
 }
 
-class PlantScreenState extends State<PlantScreen>{
-  int _selectedIndex = 0; //bottom navigation barがタップされた場所を格納する変数
-  void _onItemTapped(int index) { //bottom navigation barがタップされた時の処理
-    setState(() {
-      _selectedIndex = index;
-      //TODO something
-    });
-  }
+class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientMixin<PlantScreen>{
+
+  @override //stateの保持
+  bool get wantKeepAlive => true;
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'alarm',
+      title: 'plant',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(
 
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'ホーム',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.access_alarm),
-            label: 'アラーム',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: '設定',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
         ),
       ),
     );
