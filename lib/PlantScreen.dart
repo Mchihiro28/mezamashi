@@ -22,8 +22,8 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Column(
-
+        body: const Text(
+            'IT IS TEST ABOUT PLANTSCREEN.',
         ),
       ),
     );

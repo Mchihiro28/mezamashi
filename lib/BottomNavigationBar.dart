@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mezamashi/PlantScreen.dart';
+import 'package:mezamashi/SettingScreen.dart';
 import 'package:mezamashi/alarmListScreen.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget{
@@ -26,6 +27,7 @@ class BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>{
           children: const [
               PlantScreen(),
               alarmListScreen(),
+              SettingScreen(),
             ],
           onPageChanged: (index) {
             setState(() {

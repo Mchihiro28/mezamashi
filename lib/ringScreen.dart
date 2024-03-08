@@ -50,7 +50,7 @@ class ringScreenState extends State<ringScreen>{
     Alarm.stop(widget.alarmSettings.id).then((_) => Navigator.pop(context));
   }
 
-  void onAlarmStop(){ //アラームを止める際に呼ぶ関数
+  void _onAlarmStop(){ //アラームを止める際に呼ぶ関数
     int diff = DateTime.now().difference(widget.alarmSettings.dateTime).inSeconds;
     diff -= 15; //アラームを止めるまでの猶予秒数
     if(diff < 0){
@@ -78,7 +78,7 @@ class ringScreenState extends State<ringScreen>{
         if (didPop) {
           return;
         }
-        onAlarmStop();
+        _onAlarmStop();
       },
       child: Scaffold(
       body: Column(
@@ -111,7 +111,7 @@ class ringScreenState extends State<ringScreen>{
                           ),
                         ),
                         onPressed: () {//stop
-                          onAlarmStop();
+                          _onAlarmStop();
                         },
                         child: Text('Stop', style: TextStyle(fontSize: ss.height*0.05)),
                       ),
