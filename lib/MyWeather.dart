@@ -43,9 +43,9 @@ class MyWeather{
   }
 
 
-  Future<String?> getWeather() async {
+  Future<List<String>> getWeather() async {
     if(weatherSetting){
-      return 'weatherSetting is false';
+      return ['ws is f', ' pt']; //天気の代わりにポイントを表示
     }
 
     // 権限を取得
@@ -54,7 +54,7 @@ class MyWeather{
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       print('位置情報取得の権限がありません');
-      return 'permission error';
+      return ['per err', '位置情報取得の権限がありません']; //snackbarを出す
     }
 
     try {
@@ -66,6 +66,25 @@ class MyWeather{
       WeatherFactory wf = WeatherFactory(key);
 
       Weather w = await wf.currentWeatherByLocation(lat, lon);
+      int wetherCondition = w.weatherConditionCode!;
+      String icon = '';
+      if(wetherCondition > 801){
+        icon = '☁️';
+      }else if(wetherCondition == 801){
+        icon = '⛅';
+      }else if(wetherCondition == 800){
+        icon = '☀️';
+      }else if(wetherCondition >= 700){
+        icon = '🌀';
+      }else if(wetherCondition >= 600){
+        icon = '❄️';
+      }else if(wetherCondition >= 500){
+        icon = '☂️';
+      }else if(wetherCondition >= 300){
+        icon = '🌂';
+      }else if(wetherCondition >= 200){
+        icon = '⚡';
+      }
 
       print('天気情報は$w');
       print('天気は');
@@ -75,10 +94,10 @@ class MyWeather{
       print('湿度は');
       print(w.humidity);
 
-      return w.weatherMain;
+      return [w.weatherMain!, icon, w.temperature!.celsius.toString(), w.humidity.toString()];
     } catch (e) {
       print('位置情報を取得できませんでした。位置情報の利用を許可してください。');
-      return 'cannot get location';
+      return ['loc err', '位置情報を取得できませんでした。位置情報の利用を許可してください。'];
     }
   }
 

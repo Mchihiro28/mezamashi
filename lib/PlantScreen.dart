@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mezamashi/ManagePoint.dart';
+import 'package:mezamashi/MyWeather.dart';
 
 class PlantScreen extends StatefulWidget{
   //朝顔の画面　メイン画面の一つ
@@ -16,6 +17,7 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   bool get wantKeepAlive => true;
 
   late ManagePoint mp;
+  late MyWeather mw;
   String flowerImage = "background_day"; //花の画像を表示するパス
   String backImage = "lv0"; //背景の画像を表示するパス
 
@@ -26,6 +28,7 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   }
 
   Future<void> _reBuild() async{
+    mw  = MyWeather();
     mp = await ManagePoint.getInstance();
     if(mp.isNight()){
       backImage = "background_night";
