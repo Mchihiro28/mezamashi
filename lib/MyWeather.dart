@@ -12,11 +12,11 @@ class MyWeather{
   double _latitude = 0.0;
   double _longitude = 0.0;
 
-  //位置情報取得のためのメソッド
+
   Future<void> getLocation() async {
     // 権限を取得
     LocationPermission permission = await Geolocator.requestPermission();
-    // 権限がない場合は戻る
+
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       print('位置情報取得の権限がありません');
@@ -40,14 +40,9 @@ class MyWeather{
     print("現在地の国は、${placeMark.country}");
     print("現在地の県は、${placeMark.administrativeArea}");
     print("現在地の市は、${placeMark.locality}");
-    // setState(() {
-    //   Now_location = placeMark.locality ?? "現在地データなし";
-    //   ref.read(riverpodNowLocation.notifier).state = Now_location;
-    //   print('現在地は、$Now_location');
-    // });
   }
 
-  //天気情報を取得するためのメソッド
+
   Future<String?> getWeather() async {
     if(weatherSetting){
       return 'weatherSetting is false';
@@ -55,7 +50,7 @@ class MyWeather{
 
     // 権限を取得
     LocationPermission permission = await Geolocator.requestPermission();
-    // 権限がない場合は戻る
+
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       print('位置情報取得の権限がありません');
@@ -64,7 +59,7 @@ class MyWeather{
 
     try {
       await getLocation();
-      //自身のAPIキー
+      //APIキー
       String key = "e918267d9696f7fdbbae61c7f1138671";
       double lat = _latitude; //latitude(緯度)
       double lon = _longitude; //longitude(経度)
@@ -73,9 +68,15 @@ class MyWeather{
       Weather w = await wf.currentWeatherByLocation(lat, lon);
 
       print('天気情報は$w');
+      print('天気は');
+      print(w.weatherMain);
+      print('温度は');
+      print(w.temperature?.celsius);
+      print('湿度は');
+      print(w.humidity);
+
       return w.weatherMain;
     } catch (e) {
-      //exceptionが発生した場合のことをかく
       print('位置情報を取得できませんでした。位置情報の利用を許可してください。');
       return 'cannot get location';
     }

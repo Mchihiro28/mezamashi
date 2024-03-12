@@ -147,7 +147,6 @@ class DatabaseHelper{
     int pp = -1; //前のポイント
     int count = 0; //何連続でポイントが上昇しているか
 
-    //var data = await DatabaseHelper.query("SELECT * FROM $pointTable");
     var data = await DatabaseHelper.query(
         '''SELECT * FROM $pointTable 
            WHERE $columnPId IN(SELECT MAX($columnPId) 
