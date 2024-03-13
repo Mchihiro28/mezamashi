@@ -96,8 +96,8 @@ class MyWeather{
 
       return [w.weatherMain!, icon, w.temperature!.celsius.toString(), w.humidity.toString()];
     } catch (e) {
-      print('位置情報を取得できませんでした。位置情報の利用を許可してください。');
-      return ['loc err', '位置情報を取得できませんでした。位置情報の利用を許可してください。'];
+      print('位置情報を取得できませんでした。');
+      return ['loc err', '位置情報を取得できませんでした。'];
     }
   }
 

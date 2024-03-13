@@ -140,7 +140,7 @@ class DatabaseHelper{
 
   static Future<int> setPointDB(int point) async{ //pointをsqliteに保存
     Database? db = await DatabaseHelper.instance.database;
-    return await db!.rawInsert("INSERT INTO $pointTable(point) VALUES($point)");
+    return await db!.rawInsert("INSERT INTO $pointTable($columnPoint) VALUES($point)");
   }
 
   static Future<List<int>> getPointDB() async{ //pointをsqliteから取得

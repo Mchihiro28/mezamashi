@@ -3,7 +3,13 @@ import 'dart:math' as math;
 
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
-  int point = 0;
+  int _point = 0;
+
+  int get point => _point;
+
+  set point(int value) {
+    _point = value;
+  }
 
   static Future<ManagePoint> getInstance()async{ //singleton
     ManagePoint mp = ManagePoint();
@@ -15,12 +21,12 @@ class ManagePoint{
     var pointInfo = await DatabaseHelper.getPointDB();
     if(pointInfo[1] >= 3){
       if(pointInfo[0] > 100){
-        point = 100;
+        _point = 100;
       }else{
-        point = 0;
+        _point = 0;
       }
     }else{
-      point = pointInfo[0];
+      _point = pointInfo[0];
     }
   }
 
@@ -29,19 +35,19 @@ class ManagePoint{
     var random = math.Random();
     int randomNum = random.nextInt(5) + 1;
     List<String> fileName = ["lv5no","lv4no","lv3no","lv2no","lv1no","lv0","lv-1","lv-2",];
-    if(point >= 400){
+    if(_point >= 400){
       return fileName[0] + randomNum.toString();
-    }else if(point >= 300){
+    }else if(_point >= 300){
       return fileName[1] + randomNum.toString();
-    }else if(point >= 200){
+    }else if(_point >= 200){
       return fileName[2] + randomNum.toString();
-    }else if(point >= 100){
+    }else if(_point >= 100){
       return fileName[3] + randomNum.toString();
-    }else if(point >= 0){
+    }else if(_point >= 0){
       return fileName[4] + randomNum.toString();
-    }else if(point >= -100){
+    }else if(_point >= -100){
       return fileName[5];
-    }else if(point >= -200){
+    }else if(_point >= -200){
       return fileName[6];
     }else {
       return fileName[7];
@@ -57,8 +63,8 @@ class ManagePoint{
   }
 
   void addPoint(int num){
-    point += num;
-    DatabaseHelper.setPointDB(point);
+    _point += num;
+    DatabaseHelper.setPointDB(_point);
   }
 
 

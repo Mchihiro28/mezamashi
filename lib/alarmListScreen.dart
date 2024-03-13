@@ -132,6 +132,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
 
  @override
   Widget build(BuildContext context) {
+    super.build(context);
    var ss = MediaQuery.of(context).size;
   return MaterialApp(
     title: 'alarm',
