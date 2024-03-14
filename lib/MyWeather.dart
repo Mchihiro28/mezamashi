@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geoCoding;
+import 'package:mezamashi/sharedPref.dart';
 import 'package:weather/weather.dart';
 
 class MyWeather{
@@ -12,6 +13,11 @@ class MyWeather{
   double _latitude = 0.0;
   double _longitude = 0.0;
 
+
+  void init() async{
+    var data = await sharedPref.load("weatherSetting");
+    weatherSetting = bool.parse(data!.first);
+  }
 
   Future<void> getLocation() async {
     // 権限を取得
@@ -100,5 +106,4 @@ class MyWeather{
       return ['loc err', '位置情報を取得できませんでした。'];
     }
   }
-
 }

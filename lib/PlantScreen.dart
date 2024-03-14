@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mezamashi/ManagePoint.dart';
 import 'package:mezamashi/MyWeather.dart';
+import 'dart:math' as math;
+
+import 'package:mezamashi/sharedPref.dart';
 
 class PlantScreen extends StatefulWidget{
   //朝顔の画面　メイン画面の一つ
@@ -31,12 +34,23 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   Future<void> _reBuild() async{
     mw  = MyWeather();
     mp = await ManagePoint.getInstance();
+    int randomNum = math.Random().nextInt(5) + 1;
+    List<String>? preName = await sharedPref.load("random");
+    preName ??= [""];
+
     if(mp.isNight()){
       backImage = "background_night";
     }else{
       backImage = "background_day";
     }
     flowerImage = mp.applyPoint();
+    if(preName[0] == flowerImage){
+      randomNum = int.parse(preName[1]);
+    }
+    flowerImage = flowerImage + randomNum.toString();
+    sharedPref.save("random", [flowerImage.substring(0, flowerImage.length - 1), randomNum.toString()]);
+
+    mw.init();
     _getWeather();
 
     setState((){ });
