@@ -16,7 +16,8 @@ class MyWeather{
 
   void init() async{
     var data = await sharedPref.load("weatherSetting");
-    weatherSetting = bool.parse(data!.first);
+    data ??= ["false"];
+    weatherSetting = bool.parse(data.first);
   }
 
   Future<void> getLocation() async {

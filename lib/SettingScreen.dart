@@ -68,7 +68,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
                       side: const BorderSide(color: Colors.green),
                     ),
                     onPressed: () {
-                      print("pressed button!");
+                      _myDialog();
                     },
                     child: const Text('表示', style: TextStyle(color: Colors.black)),
                   ),
@@ -78,6 +78,32 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _myDialog() { //プライバシーポリシーを表示するalertdialog
+
+    const String PRIVACY_POLICY = '''
+    something content
+    something content
+      ''';
+
+    showDialog(
+      context: context,
+      builder: (context) => SingleChildScrollView(
+        child: AlertDialog(
+        title: const Text("プライバシーポリシー"),
+        content: const Text(PRIVACY_POLICY),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("閉じる"),
+          )
+        ],
+      ),
       ),
     );
   }

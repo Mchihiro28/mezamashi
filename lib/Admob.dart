@@ -1,0 +1,56 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+class Admob extends StatefulWidget {
+  const Admob({
+    super.key,
+    required this.size,
+  });
+  final AdSize size;
+
+  @override
+  AdmobState createState() => AdmobState();
+}
+
+class AdmobState extends State<Admob> {
+  late BannerAd banner;
+
+  @override
+  void initState() {
+    super.initState();
+    banner = _createBanner(widget.size);
+  }
+
+  @override
+  void dispose() {
+    banner.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: banner.size.width.toDouble(),
+      height: banner.size.height.toDouble(),
+      child: AdWidget(ad: banner),
+    );
+  }
+
+  String get bannerAdUnitId => 'ca-app-pub-3940256099942544/6300978111';
+
+  BannerAd _createBanner(AdSize size) {
+    return BannerAd(
+      size: size,
+      adUnitId: bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          banner.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    )..load();
+  }
+}

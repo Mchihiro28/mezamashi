@@ -47,6 +47,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2742833893230662~3762015914" />
+
         <service
             android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
             android:permission="android.permission.BIND_JOB_SERVICE"
