@@ -2,10 +2,8 @@ import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mezamashi/ManagePoint.dart';
-import 'AlarmFactory.dart';
 import 'package:volume_controller/volume_controller.dart';
 
-import 'DatabaseHelper.dart';
 
 class ringScreen extends StatefulWidget {
   final AlarmSettings alarmSettings;
@@ -20,6 +18,8 @@ class ringScreenState extends State<ringScreen>{
 
   late final ManagePoint mp;
   double orgVolume = 0; //音量を変える前の大きさ
+  static const int postponement = 15; //アラームを止めるまでの猶予秒数
+  static const int punishAndPrize = -10; //バツとして引くポイント＆成功したときの倍率
 
   @override
   void initState() {
@@ -52,11 +52,11 @@ class ringScreenState extends State<ringScreen>{
 
   void _onAlarmStop(){ //アラームを止める際に呼ぶ関数
     int diff = DateTime.now().difference(widget.alarmSettings.dateTime).inSeconds;
-    diff -= 15; //アラームを止めるまでの猶予秒数
+    diff -= postponement; //アラームを止めるまでの猶予秒数
     if(diff < 0){
-      mp.addPoint(diff * -10);
+      mp.addPoint(diff * punishAndPrize);
     }else{
-      mp.addPoint(-10);
+      mp.addPoint(punishAndPrize);
     }
 
     Alarm.stop(widget.alarmSettings.id).then((_){

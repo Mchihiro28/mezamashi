@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mezamashi/DatabaseHelper.dart';
 import 'package:mezamashi/ringScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'AdInterstitial.dart';
 import 'AlarmFactory.dart';
 import 'ManagePoint.dart';
 import 'SimpleDialog.dart';
@@ -22,17 +23,21 @@ class alarmListScreen extends StatefulWidget{
 class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliveClientMixin<alarmListScreen>{
 
  AlarmFactory af = AlarmFactory();
+ InterstitialAdManager interstitialAdManager = InterstitialAdManager();
  late final ManagePoint mp;
  bool switchValue = false;
  bool isInitStream = false;
  late List<AlarmSettings> alarms;
  StreamSubscription<AlarmSettings>? subscription; //alarmが鳴ったことをlistenするstream
+ int createdCount =0; //アラームを何回作ったかをカウントする
+ static const int displayPeriod = 3; //3回に1回広告を表示する
 
  @override
  initState(){
    super.initState();
    _reBuild();
    AlarmStorage.init();
+   interstitialAdManager.interstitialAd();
    if (Alarm.android) {
      checkAndroidNotificationPermission();
    }
@@ -92,6 +97,11 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    setState(() {
       selectedTime = picked;
       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
+      createdCount += 1;
+      if(createdCount == displayPeriod){
+        createdCount = 0;
+        interstitialAdManager.showInterstitialAd();
+      }
     });
  }
 

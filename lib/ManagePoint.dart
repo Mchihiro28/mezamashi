@@ -2,13 +2,8 @@ import 'package:mezamashi/DatabaseHelper.dart';
 
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
-  int _point = 0;
-
-  int get point => _point;
-
-  set point(int value) {
-    _point = value;
-  }
+  int point = 0;
+  static const int magnification = 100; //applyPointで用いるポイント判定の倍率
 
   static Future<ManagePoint> getInstance()async{ //singleton
     ManagePoint mp = ManagePoint();
@@ -20,35 +15,24 @@ class ManagePoint{
     var pointInfo = await DatabaseHelper.getPointDB();
     if(pointInfo[1] >= 3){
       if(pointInfo[0] > 100){
-        _point = 100;
+        point = 100;
       }else{
-        _point = 0;
+        point = 0;
       }
     }else{
-      _point = pointInfo[0];
+      point = pointInfo[0];
     }
   }
 
 
   String applyPoint(){ //ポイント→ファイル名
-    List<String> fileName = ["lv5no","lv4no","lv3no","lv2no","lv1no","lv0","lv-1","lv-2",];
-    if(_point >= 400){
-      return fileName[0];
-    }else if(_point >= 300){
-      return fileName[1];
-    }else if(_point >= 200){
-      return fileName[2];
-    }else if(_point >= 100){
-      return fileName[3];
-    }else if(_point >= 0){
-      return fileName[4];
-    }else if(_point >= -100){
-      return fileName[5];
-    }else if(_point >= -200){
-      return fileName[6];
-    }else {
-      return fileName[7];
+    List<String> fileName = ["lv-2","lv-1","lv0","lv1no","lv2no","lv3no","lv4no","lv5no",];
+    for(int i=4; i>=-2; i--){
+      if(point >= i*magnification){
+        return fileName[i+3];
+      }
     }
+    return fileName[0];
   }
 
   bool isNight(){ //現在時刻が昼かを返す関数　true:昼　false:夜
@@ -60,8 +44,8 @@ class ManagePoint{
   }
 
   void addPoint(int num){
-    _point += num;
-    DatabaseHelper.setPointDB(_point);
+    point += num;
+    DatabaseHelper.setPointDB(point);
   }
 
 
