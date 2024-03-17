@@ -29,8 +29,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
  bool isInitStream = false;
  late List<AlarmSettings> alarms;
  StreamSubscription<AlarmSettings>? subscription; //alarmが鳴ったことをlistenするstream
- int createdCount =0; //アラームを何回作ったかをカウントする
- static const int displayPeriod = 3; //3回に1回広告を表示する
+
 
  @override
  initState(){
@@ -97,11 +96,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    setState(() {
       selectedTime = picked;
       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
-      createdCount += 1;
-      if(createdCount == displayPeriod){
-        createdCount = 0;
-        interstitialAdManager.showInterstitialAd();
-      }
+      interstitialAdManager.showInterstitialAd();
     });
  }
 
@@ -173,7 +168,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
                 }
                 return Container(
                   //listの要素コンテナ
-                  height: ss.height*0.08,
+                  constraints: const BoxConstraints.expand(),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width:ss.height*0.004),
                       borderRadius: BorderRadius.circular(10)),

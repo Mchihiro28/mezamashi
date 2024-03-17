@@ -17,7 +17,20 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
   bool switchValue = false;
 
   @override
+  initState(){
+    super.initState();
+    _init();
+  }
+
+  Future<void> _init()async{
+    var data = await sharedPref.load("weatherSetting");
+    data ??= ["false"];
+    switchValue = bool.parse(data.first);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     var ss = MediaQuery.of(context).size;
     return Scaffold(
       body: Center(

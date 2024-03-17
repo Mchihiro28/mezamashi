@@ -1,8 +1,11 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mezamashi/sharedPref.dart';
 
 class InterstitialAdManager implements InterstitialAdLoadCallback{
   InterstitialAd? _interstitialAd;
   bool _isAdLoaded = false;
+  int createdCount =0; //アラームを何回作ったかをカウントする
+  final int displayPeriod = 3; //3回に1回広告を表示する
 
   void interstitialAd() {
     InterstitialAd.load(
@@ -18,15 +21,37 @@ class InterstitialAdManager implements InterstitialAdLoadCallback{
         },
       ),
     );
+
+    getCount();
   }
 
-  void showInterstitialAd() {
+  void getCount() async{
+    var data = await sharedPref.load("Interstitial");
+    data ??= ["0"];
+    createdCount = int.parse(data.first);
+  }
+
+  void addCount() async{
+    createdCount += 1;
+    if(createdCount == 4){
+      createdCount = 0;
+    }
+    sharedPref.save("Interstitial",["$createdCount"]);
+  }
+
+  bool showInterstitialAd() {
+    addCount();
+    if(createdCount != 3){
+      return false;
+    }
+
     if (_isAdLoaded) {
       _interstitialAd?.fullScreenContentCallback;
       _interstitialAd?.show();
-
+      return true;
     } else {
       print('Interstitial ad is not yet loaded.');
+      return false;
     }
   }
 

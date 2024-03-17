@@ -20,8 +20,8 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
 
   late ManagePoint mp;
   late MyWeather mw;
-  String flowerImage = "background_day"; //花の画像を表示するパス
-  String backImage = "lv0"; //背景の画像を表示するパス
+  String flowerImage = "lv0"; //花の画像を表示するパス
+  String backImage = "background_day"; //背景の画像を表示するパス
   String weatherText = ""; //天気のテキスト
   String isSnackBar = "false"; //snackbarを表示するフラグ
 
