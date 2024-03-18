@@ -51,7 +51,7 @@ class MyWeather{
 
 
   Future<List<String>> getWeather() async {
-    if(weatherSetting){
+    if(!weatherSetting){
       return ['ws is f', ' pt']; //天気の代わりにポイントを表示
     }
 

@@ -38,9 +38,9 @@ class ManagePoint{
   bool isNight(){ //現在時刻が昼かを返す関数　true:昼　false:夜
     DateTime now = DateTime.now();
     if(now.isBefore(DateTime(now.year, now.month, now.day, 18))){
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   void addPoint(int num){

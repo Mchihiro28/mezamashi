@@ -26,6 +26,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
     var data = await sharedPref.load("weatherSetting");
     data ??= ["false"];
     switchValue = bool.parse(data.first);
+    setState((){ });
   }
 
   @override

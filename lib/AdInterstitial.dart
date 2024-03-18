@@ -33,15 +33,12 @@ class InterstitialAdManager implements InterstitialAdLoadCallback{
 
   void addCount() async{
     createdCount += 1;
-    if(createdCount == 4){
-      createdCount = 0;
-    }
     sharedPref.save("Interstitial",["$createdCount"]);
   }
 
   bool showInterstitialAd() {
     addCount();
-    if(createdCount != 3){
+    if((createdCount % displayPeriod) != 0){
       return false;
     }
 

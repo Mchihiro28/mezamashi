@@ -150,12 +150,8 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
           },
           child: const Icon(Icons.add_alarm)
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          SizedBox.square(dimension: ss.height*0.06,),
-          Container(
-            height: ss.height*0.8,
+      body: Container(
+            constraints: const BoxConstraints.expand(),
             padding: const EdgeInsets.all(4),
             // 配列を元にリスト表示
             child: ListView.builder(
@@ -168,7 +164,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
                 }
                 return Container(
                   //listの要素コンテナ
-                  constraints: const BoxConstraints.expand(),
+                  height: ss.height*0.08,
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width:ss.height*0.004),
                       borderRadius: BorderRadius.circular(10)),
@@ -214,10 +210,8 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
               },
             ),
           ),
-        ],
       ),
-    ),
-  );
+    );
  }
 
 }

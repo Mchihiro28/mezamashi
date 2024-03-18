@@ -28,11 +28,11 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   @override
   initState(){
     super.initState();
-    _reBuild();
+    _reBuildImage();
+    _reBuildWeather();
   }
 
-  Future<void> _reBuild() async{
-    mw  = MyWeather();
+  Future<void> _reBuildImage() async{ //画像関係のロード
     mp = await ManagePoint.getInstance();
     int randomNum = math.Random().nextInt(5) + 1;
     List<String>? preName = await sharedPref.load("random");
@@ -50,20 +50,25 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
     flowerImage = flowerImage + randomNum.toString();
     sharedPref.save("random", [flowerImage.substring(0, flowerImage.length - 1), randomNum.toString()]);
 
+    setState((){ });
+  }
+
+  Future<void> _reBuildWeather() async{ //天気のロード
+    mw  = MyWeather();
     mw.init();
-    _getWeather();
+    weatherText = await _getWeather();
 
     setState((){ });
   }
 
-  Future<void> _getWeather() async{
+  Future<String> _getWeather() async{
     List<String> s = await mw.getWeather();
     if(s.first == 'ws is f'){
       weatherText = mp.point.toString();
     }else if((s.first == 'per err') || (s.first == 'loc err')){
       isSnackBar = s[1];
     }
-    weatherText = '${s[1]}  気温:${s[2]}℃  湿度:${s[3]}%';
+    return '${s[1]}  気温:${double.parse(s[2]).toStringAsFixed(1)}℃  湿度:${double.parse(s[3]).toStringAsFixed(1)}%';
   }
 
   @override
@@ -96,11 +101,11 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
                   child: Image.asset('assets/images/$flowerImage.png'),),
               ),
               Align(
-                  alignment: const Alignment(0.5, -0.9),
+                  alignment: const Alignment(-0.5, -0.9),
                   child: Container(
                     alignment: Alignment.center,
-                    width: ss.width*0.4,
-                    height: ss.height*0.08,
+                    width: ss.width* 0.4,
+                    height: ss.height*0.06,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),

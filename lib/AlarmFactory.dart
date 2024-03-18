@@ -31,9 +31,9 @@ class AlarmFactory{
 
   void deleteAlarm(int index){ //alarmを削除する
     if(alarms.isNotEmpty) {
+      DatabaseHelper.delete(DatabaseHelper.alarmTable, alarms[index].id!);
       alarms[index].stopAlarm();
       alarms.removeAt(index);
-      DatabaseHelper.delete(DatabaseHelper.alarmTable, alarms[index].id!);
     }
   }
 
