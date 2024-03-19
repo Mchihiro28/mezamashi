@@ -14,7 +14,7 @@ class MyWeather{
   double _longitude = 0.0;
 
 
-  void init() async{
+  Future<void> init() async{
     var data = await sharedPref.load("weatherSetting");
     data ??= ["false"];
     weatherSetting = bool.parse(data.first);

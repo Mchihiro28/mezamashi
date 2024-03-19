@@ -37,6 +37,12 @@ class AlarmFactory{
     }
   }
 
+  void deleteAllAlarm(){ //全てのアラームを削除
+    for(var e in alarms){
+      e.stopAlarm();
+    }
+  }
+
   void changeValidity(int index, int validity){ //アラームの有効性を変化させて、dbをupdateする関数
     alarms[index].isValid = validity;
 

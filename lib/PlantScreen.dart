@@ -29,7 +29,6 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   initState(){
     super.initState();
     _reBuildImage();
-    _reBuildWeather();
   }
 
   Future<void> _reBuildImage() async{ //画像関係のロード
@@ -51,11 +50,13 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
     sharedPref.save("random", [flowerImage.substring(0, flowerImage.length - 1), randomNum.toString()]);
 
     setState((){ });
+
+    _reBuildWeather();
   }
 
   Future<void> _reBuildWeather() async{ //天気のロード
     mw  = MyWeather();
-    mw.init();
+    await mw.init();
     weatherText = await _getWeather();
 
     setState((){ });
@@ -64,7 +65,7 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   Future<String> _getWeather() async{
     List<String> s = await mw.getWeather();
     if(s.first == 'ws is f'){
-      weatherText = mp.point.toString();
+      return mp.point.toString() + s.last;
     }else if((s.first == 'per err') || (s.first == 'loc err')){
       isSnackBar = s[1];
     }

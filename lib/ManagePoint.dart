@@ -3,7 +3,8 @@ import 'package:mezamashi/DatabaseHelper.dart';
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
   int point = 0;
-  static const int magnification = 100; //applyPointで用いるポイント判定の倍率
+  //FIXME
+  static const int magnification = 2; //applyPointで用いるポイント判定の倍率
 
   static Future<ManagePoint> getInstance()async{ //singleton
     ManagePoint mp = ManagePoint();
@@ -46,6 +47,8 @@ class ManagePoint{
   void addPoint(int num){
     point += num;
     DatabaseHelper.setPointDB(point);
+
+    print("/////point: $point pt/////");
   }
 
 

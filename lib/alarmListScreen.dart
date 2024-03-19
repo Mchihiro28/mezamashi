@@ -47,7 +47,6 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
  bool get wantKeepAlive => true;
 
  void setStream(){ //streamをセットする関数
-   interrupt();
    if(isInitStream == false) {
      subscription ??= Alarm.ringStream.stream.listen(
            (alarmSettings) => navigateToRingScreen(alarmSettings),
@@ -129,9 +128,6 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    setState((){ });
  }
 
- void interrupt(){ //開発者用に処理を実行する関数
-
- }
 
 
 
