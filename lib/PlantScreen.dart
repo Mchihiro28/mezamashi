@@ -33,6 +33,7 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
 
   Future<void> _reBuildImage() async{ //画像関係のロード
     mp = await ManagePoint.getInstance();
+    mp.point = 0;//FIXME
     int randomNum = math.Random().nextInt(5) + 1;
     List<String>? preName = await sharedPref.load("random");
     preName ??= [""];
@@ -43,11 +44,18 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
       backImage = "background_day";
     }
     flowerImage = mp.applyPoint();
+
+    //画像名の最後が0以上か（朝顔の咲いた画像か）判定
+    if(flowerImage.substring(flowerImage.length-1, flowerImage.length) == 'o'){
+    //以前の画像名と今の画像名が同じなら保存していたrandomNumを適用
     if(preName[0] == flowerImage){
-      randomNum = int.parse(preName[1]);
+        randomNum = int.parse(preName[1]);
+      }
+      sharedPref.save("random", [flowerImage, randomNum.toString()]);
+      flowerImage = flowerImage + randomNum.toString();
     }
-    flowerImage = flowerImage + randomNum.toString();
-    sharedPref.save("random", [flowerImage.substring(0, flowerImage.length - 1), randomNum.toString()]);
+
+    
 
     setState((){ });
 

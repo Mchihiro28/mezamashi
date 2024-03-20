@@ -4,7 +4,8 @@ class ManagePoint{
   // 朝顔の成長関連を処理するクラス
   int point = 0;
   //FIXME
-  static const int magnification = 2; //applyPointで用いるポイント判定の倍率
+  static const int loginPoint = 100; //ログインボーナスでもらえるポイント数
+  static const int magnification = 100; //applyPointで用いるポイント判定の倍率
 
   static Future<ManagePoint> getInstance()async{ //singleton
     ManagePoint mp = ManagePoint();

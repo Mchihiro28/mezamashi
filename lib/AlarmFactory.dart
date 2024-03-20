@@ -6,8 +6,9 @@ class AlarmFactory{
   //MyAlarmクラスのインスタンスを生成、管理するクラス
   List<MyAlarm> alarms = []; //作ったアラームのインスタンスを格納するリスト
 
-  AlarmFactory();
+  static AlarmFactory instance = AlarmFactory();
 
+  static AlarmFactory getInstance() => instance;
 
   void sortAlarm(){ //alarmを時刻順に並び替える
     SplayTreeMap<int, MyAlarm> timeValues = SplayTreeMap();
@@ -39,8 +40,10 @@ class AlarmFactory{
 
   void deleteAllAlarm(){ //全てのアラームを削除
     for(var e in alarms){
+      DatabaseHelper.delete(DatabaseHelper.alarmTable, e.id!);
       e.stopAlarm();
     }
+    alarms.clear();
   }
 
   void changeValidity(int index, int validity){ //アラームの有効性を変化させて、dbをupdateする関数

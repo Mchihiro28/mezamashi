@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mezamashi/AlarmFactory.dart';
 import 'package:mezamashi/sharedPref.dart';
 
 class SettingScreen extends StatefulWidget{
@@ -14,6 +15,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
   @override //stateの保持
   bool get wantKeepAlive => true;
 
+  AlarmFactory af = AlarmFactory.getInstance();
   bool switchValue = false;
 
   @override
@@ -62,6 +64,32 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
                         sharedPref.save("weatherSetting", ["false"]);
                       }
                     });},
+                  ),
+                  SizedBox(width: ss.width*0.1),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: ss.height*0.15,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  const Text('全てのアラームを削除',
+                      style:TextStyle(fontSize: 18)),
+                  SizedBox(width: ss.width*0.02),
+                  const Text('不具合が起こった際にご使用ください。',
+                      style:TextStyle(fontSize: 12)),
+                  SizedBox(width: ss.width*0.05),
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      side: const BorderSide(color: Colors.green),
+                    ),
+                    onPressed: () {
+                      af.deleteAllAlarm();
+                    },
+                    child: const Text('削除', style: TextStyle(color: Colors.black)),
                   ),
                   SizedBox(width: ss.width*0.1),
                 ],

@@ -22,7 +22,7 @@ class alarmListScreen extends StatefulWidget{
 
 class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliveClientMixin<alarmListScreen>{
 
- AlarmFactory af = AlarmFactory();
+ AlarmFactory af = AlarmFactory.getInstance();
  InterstitialAdManager interstitialAdManager = InterstitialAdManager();
  late final ManagePoint mp;
  bool switchValue = false;
@@ -124,7 +124,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
  Future<void> _reBuild() async{
    await DatabaseHelper.getAlarmDB(af);
    mp = await ManagePoint.getInstance();
-   mp.addPoint(1); //ログインボーナス1pt
+   mp.addPoint(ManagePoint.loginPoint); //ログインボーナス
    setState((){ });
  }
 
