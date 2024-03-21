@@ -22,6 +22,12 @@ class alarmListScreen extends StatefulWidget{
 
 class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliveClientMixin<alarmListScreen>{
 
+  static final alarmListScreenState _instance = alarmListScreenState._internal();
+  factory alarmListScreenState() {
+    return _instance;
+  }
+  alarmListScreenState._internal();
+
  AlarmFactory af = AlarmFactory.getInstance();
  InterstitialAdManager interstitialAdManager = InterstitialAdManager();
  late final ManagePoint mp;
@@ -127,7 +133,6 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    mp.addPoint(ManagePoint.loginPoint); //ログインボーナス
    setState((){ });
  }
-
 
 
 

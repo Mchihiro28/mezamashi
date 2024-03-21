@@ -18,8 +18,6 @@ class ringScreenState extends State<ringScreen>{
 
   late final ManagePoint mp;
   double orgVolume = 0; //音量を変える前の大きさ
-  static const int postponement = 15; //アラームを止めるまでの猶予秒数
-  static const int punishAndPrize = -10; //バツとして引くポイント＆成功したときの倍率
 
   @override
   void initState() {
@@ -42,7 +40,7 @@ class ringScreenState extends State<ringScreen>{
 
   Future<void> _getVolume() async {
     orgVolume = await VolumeController().getVolume();
-    VolumeController().setVolume(1.0); //FIXME 音量の調節
+    VolumeController().setVolume(0.4); //FIXME 音量の調節
   }
 
   Future<void> _delay() async { //30分後に止める
@@ -52,11 +50,11 @@ class ringScreenState extends State<ringScreen>{
 
   void _onAlarmStop(){ //アラームを止める際に呼ぶ関数
     int diff = DateTime.now().difference(widget.alarmSettings.dateTime).inSeconds;
-    diff -= postponement; //アラームを止めるまでの猶予秒数
+    diff -= ManagePoint.postponement; //アラームを止めるまでの猶予秒数
     if(diff < 0){
-      mp.addPoint(diff * punishAndPrize);
+      mp.addPoint(diff * ManagePoint.punishAndPrize);
     }else{
-      mp.addPoint(punishAndPrize);
+      mp.addPoint(ManagePoint.punishAndPrize);
     }
 
     Alarm.stop(widget.alarmSettings.id).then((_){
@@ -118,7 +116,7 @@ class ringScreenState extends State<ringScreen>{
                       OutlinedButton(
                         onPressed: () {//snooze
                           final now = DateTime.now();
-                          mp.addPoint(-30); //ポイント変動：スヌーズするたびに-30pt
+                          mp.addPoint(ManagePoint.snoozePoint); //ポイント変動：スヌーズするたびに-30pt
                           Alarm.set(
                             alarmSettings: widget.alarmSettings.copyWith(
                               dateTime: DateTime(

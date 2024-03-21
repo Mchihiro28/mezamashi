@@ -33,7 +33,6 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
 
   Future<void> _reBuildImage() async{ //画像関係のロード
     mp = await ManagePoint.getInstance();
-    mp.point = 0;//FIXME
     int randomNum = math.Random().nextInt(5) + 1;
     List<String>? preName = await sharedPref.load("random");
     preName ??= [""];

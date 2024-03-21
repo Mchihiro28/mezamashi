@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mezamashi/AlarmFactory.dart';
+import 'package:mezamashi/alarmListScreen.dart';
 import 'package:mezamashi/sharedPref.dart';
 
 class SettingScreen extends StatefulWidget{
@@ -78,7 +79,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
                   const Text('全てのアラームを削除',
                       style:TextStyle(fontSize: 18)),
                   SizedBox(width: ss.width*0.02),
-                  const Text('不具合が起こった際にご使用ください。',
+                  const Text('使用後はアプリを再起動してください。',
                       style:TextStyle(fontSize: 12)),
                   SizedBox(width: ss.width*0.05),
                   OutlinedButton(
@@ -88,6 +89,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
                     ),
                     onPressed: () {
                       af.deleteAllAlarm();
+                      alarmListScreenState().setState(() { });
                     },
                     child: const Text('削除', style: TextStyle(color: Colors.black)),
                   ),

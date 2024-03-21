@@ -3,9 +3,12 @@ import 'package:mezamashi/DatabaseHelper.dart';
 class ManagePoint{
   // 朝顔の成長関連を処理するクラス
   int point = 0;
-  //FIXME
-  static const int loginPoint = 100; //ログインボーナスでもらえるポイント数
+
+  static const int loginPoint = 1; //ログインボーナスでもらえるポイント数
   static const int magnification = 100; //applyPointで用いるポイント判定の倍率
+  static const int postponement = 15; //アラームを止めるまでの猶予秒数
+  static const int punishAndPrize = -10; //バツとして引くポイント＆成功したときの倍率
+  static const int snoozePoint = -30; //スヌーズしたときに引くポイント
 
   static Future<ManagePoint> getInstance()async{ //singleton
     ManagePoint mp = ManagePoint();
