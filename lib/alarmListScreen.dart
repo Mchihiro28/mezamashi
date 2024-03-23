@@ -142,6 +142,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    var ss = MediaQuery.of(context).size;
   return MaterialApp(
     title: 'alarm',
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(primarySwatch: Colors.blue),
     home: Scaffold(
       resizeToAvoidBottomInset: false,

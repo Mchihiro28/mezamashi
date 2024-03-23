@@ -1,7 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:mezamashi/BottomNavigationBar.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mezamashi/Intro.dart';
 
 void main() {
   final binding = WidgetsFlutterBinding.ensureInitialized();
@@ -25,5 +25,8 @@ void main() {
 
   Alarm.init();
   MobileAds.instance.initialize();
-  runApp(const MaterialApp(home: BottomNavigationBarScreen()));
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Intro()
+  ));
 }

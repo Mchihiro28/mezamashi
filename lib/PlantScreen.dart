@@ -18,6 +18,12 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
   @override //stateの保持
   bool get wantKeepAlive => true;
 
+  static final PlantScreenState _instance = PlantScreenState._internal();
+  factory PlantScreenState() {
+    return _instance;
+  }
+  PlantScreenState._internal();
+
   late ManagePoint mp;
   late MyWeather mw;
   String flowerImage = "lv0"; //花の画像を表示するパス
@@ -58,10 +64,10 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
 
     setState((){ });
 
-    _reBuildWeather();
+    reBuildWeather();
   }
 
-  Future<void> _reBuildWeather() async{ //天気のロード
+  Future<void> reBuildWeather() async{ //天気のロード
     mw  = MyWeather();
     await mw.init();
     weatherText = await _getWeather();
@@ -91,7 +97,11 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
       );
       isSnackBar = "false";
     }
-    return Scaffold(
+    return MaterialApp(
+        title: 'plant',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(primarySwatch: Colors.blue),
+    home: Scaffold(
       body: Center(
         child: Stack(
             fit: StackFit.expand,
@@ -125,6 +135,7 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
             ]
         ),
       ),
+    )
     );
   }
 
