@@ -48,11 +48,6 @@ class BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>{
                   BuildContext context,
                   AsyncSnapshot<AnchoredAdaptiveBannerAdSize?> snapshot,
                   ) {
-                return Container(
-                  height: 70,
-                  color: Colors.white70,
-                );
-                /*FIXME: 上のreturn消してコメントアウト外す
                 if (snapshot.hasData) {
                   final data = snapshot.data;
                   if (data != null) {
@@ -72,7 +67,7 @@ class BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>{
                     height: 70,
                     color: Colors.white70,
                   );
-                }*/
+                }
               },
             ),
               BottomNavigationBar(

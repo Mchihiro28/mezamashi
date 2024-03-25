@@ -1,9 +1,12 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mezamashi/BottomNavigationBar.dart';
 import 'package:mezamashi/Intro.dart';
+import 'package:mezamashi/alarmListScreen.dart';
+import 'package:mezamashi/sharedPref.dart';
 
-void main() {
+Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
 
   binding.addPostFrameCallback((_) async {
@@ -25,8 +28,15 @@ void main() {
 
   Alarm.init();
   MobileAds.instance.initialize();
+
+  Widget homeWidget = const BottomNavigationBarScreen();
+  List<String>? data = await sharedPref.load("isAccount");
+  if(data == null){
+    homeWidget = Intro();
+  }
+
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Intro()
+      home: homeWidget,
   ));
 }

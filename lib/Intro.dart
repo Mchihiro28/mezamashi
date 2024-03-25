@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
+import 'package:mezamashi/sharedPref.dart';
 
 import 'BottomNavigationBar.dart';
 
@@ -8,7 +9,6 @@ class Intro extends StatelessWidget {
   final pages = [
     PageViewModel( //アラーム作るボタンの説明
       pageColor: Colors.green[200],
-      bubble: Image.asset('assets/images/lv0.png'),
       body: const Text(
         '画面右下にあるボタンを押すと新規アラームを作ることができます',
       ),
@@ -26,7 +26,7 @@ class Intro extends StatelessWidget {
         fontSize: 20,
       ),
       mainImage: Image.asset(
-        'assets/images/lv0.png',
+        'assets/images/intro1.png',
         height: 300.0,
         width: 300.0,
         alignment: Alignment.center,
@@ -34,7 +34,6 @@ class Intro extends StatelessWidget {
     ),
     PageViewModel( //アラーム作る画面の説明
       pageColor: Colors.green[200],
-      bubble: Image.asset('assets/images/lv0.png'),
       body: const Text(
         'アラームを設定したい時間とアラーム音を選べます',
       ),
@@ -52,7 +51,7 @@ class Intro extends StatelessWidget {
         fontSize: 20,
       ),
       mainImage: Image.asset(
-        'assets/images/lv0.png',
+        'assets/images/intro2.png',
         height: 300.0,
         width: 300.0,
         alignment: Alignment.center,
@@ -60,13 +59,12 @@ class Intro extends StatelessWidget {
     ),
     PageViewModel(
       pageColor: Colors.green[200],
-      iconImageAssetPath: 'assets/images/lv0.png',
       body: const Text(
         'アラームが鳴ってから止める時間が早かったり、スヌーズを使わないと朝顔が成長してより多くの花が咲きます',
       ),
       title: const Text('朝顔の成長について'),
       mainImage: Image.asset(
-        'assets/images/lv0.png',
+        'assets/images/intro3.png',
         height: 285.0,
         width: 285.0,
         alignment: Alignment.center,
@@ -88,6 +86,7 @@ class Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    sharedPref.save("isAccount", ["true"]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'IntroViews Flutter',
