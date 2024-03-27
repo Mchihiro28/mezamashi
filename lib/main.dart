@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mezamashi/BottomNavigationBar.dart';
 import 'package:mezamashi/Intro.dart';
-import 'package:mezamashi/alarmListScreen.dart';
 import 'package:mezamashi/sharedPref.dart';
 
 Future<void> main() async {

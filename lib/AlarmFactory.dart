@@ -60,6 +60,13 @@ class AlarmFactory{
     );
   }
 
-
+  void resetAllAlarm(){ //全てのアラームを解除して再セット
+    for(var e in alarms){
+      if(e.isValid == 0){
+        e.stopAlarm();
+        e.createAlarm();
+      }
+    }
+  }
 
 }

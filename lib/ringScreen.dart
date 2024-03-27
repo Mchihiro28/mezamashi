@@ -1,6 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mezamashi/AlarmFactory.dart';
 import 'package:mezamashi/ManagePoint.dart';
 import 'package:volume_controller/volume_controller.dart';
 
@@ -17,6 +18,7 @@ class ringScreenState extends State<ringScreen>{
   //TODO　解除ボタン（パズル）
 
   late final ManagePoint mp;
+  final AlarmFactory af = AlarmFactory.getInstance();
   double orgVolume = 0; //音量を変える前の大きさ
 
   @override
@@ -58,6 +60,7 @@ class ringScreenState extends State<ringScreen>{
     }
 
     Alarm.stop(widget.alarmSettings.id).then((_){
+      af.resetAllAlarm();
       if (Navigator.canPop(context)) {
         Navigator.pop(context); // 戻るを選択した場合のみpopを明示的に呼ぶ
       } else {
@@ -117,6 +120,7 @@ class ringScreenState extends State<ringScreen>{
                         onPressed: () {//snooze
                           final now = DateTime.now();
                           mp.addPoint(ManagePoint.snoozePoint); //ポイント変動：スヌーズするたびに-30pt
+                          af.resetAllAlarm();
                           Alarm.set(
                             alarmSettings: widget.alarmSettings.copyWith(
                               dateTime: DateTime(

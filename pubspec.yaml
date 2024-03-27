@@ -47,6 +47,7 @@ dependencies:
   geocoding: ^2.2.0
   google_mobile_ads: ^4.0.0
   intro_views_flutter: ^3.2.0
+  flutter_native_splash: ^2.3.11
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,10 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_native_splash:
+  color: "#b6d7a8"
+  image: "assets/images/lv0.png"
+
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -74,6 +79,8 @@ flutter:
   assets:
      - assets/sounds/
      - assets/images/
+
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
