@@ -48,6 +48,7 @@ dependencies:
   google_mobile_ads: ^4.0.0
   intro_views_flutter: ^3.2.0
   flutter_native_splash: ^2.3.11
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -64,8 +65,14 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 flutter_native_splash:
-  color: "#b6d7a8"
-  image: "assets/images/lv0.png"
+  color: "#d9ead3"
+  image: "assets/images/icon_foreground.png"
+
+flutter_launcher_icons:
+  image_path: "assets/images/icon_foreground.png"
+  android: true
+  adaptive_icon_background: "assets/images/background_day.jpg"
+  adaptive_icon_foreground: "assets/images/icon_foreground.png"
 
 # The following section is specific to Flutter packages.
 flutter:
