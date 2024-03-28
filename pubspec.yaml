@@ -69,10 +69,10 @@ flutter_native_splash:
   image: "assets/images/icon_foreground.png"
 
 flutter_launcher_icons:
-  image_path: "assets/images/icon_foreground.png"
+  image_path: "assets/images/app_icon_fore.png"
   android: true
-  adaptive_icon_background: "assets/images/background_day.jpg"
-  adaptive_icon_foreground: "assets/images/icon_foreground.png"
+  adaptive_icon_background: "assets/images/background_day_sqr.jpg"
+  adaptive_icon_foreground: "assets/images/app_icon_fore.png"
 
 # The following section is specific to Flutter packages.
 flutter:
