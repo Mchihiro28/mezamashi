@@ -42,7 +42,7 @@ class ringScreenState extends State<ringScreen>{
 
   Future<void> _getVolume() async {
     orgVolume = await VolumeController().getVolume();
-    VolumeController().setVolume(0.4); //FIXME 音量の調節
+    VolumeController().setVolume(1);
   }
 
   Future<void> _delay() async { //30分後に止める
@@ -131,7 +131,7 @@ class ringScreenState extends State<ringScreen>{
                                 now.minute,
                                 0,
                                 0,
-                              ).add(const Duration(minutes: 1)),//FIXME スヌーズを何分後にならすか
+                              ).add(const Duration(minutes: 10)),
                             ),
                           ).then((_) => Navigator.pop(context));
                         },

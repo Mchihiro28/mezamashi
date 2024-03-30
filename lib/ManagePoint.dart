@@ -42,7 +42,7 @@ class ManagePoint{
 
   bool isNight(){ //現在時刻が昼かを返す関数　true:昼　false:夜
     DateTime now = DateTime.now();
-    if(now.isBefore(DateTime(now.year, now.month, now.day, 18))){
+    if((now.isBefore(DateTime(now.year, now.month, now.day, 18))) && (now.isAfter(DateTime(now.year, now.month, now.day, 6)))){
       return false;
     }
     return true;
@@ -51,8 +51,6 @@ class ManagePoint{
   void addPoint(int num){
     point += num;
     DatabaseHelper.setPointDB(point);
-
-    print("/////point: $point pt/////");
   }
 
 

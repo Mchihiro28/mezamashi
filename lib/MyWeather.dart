@@ -37,16 +37,11 @@ class MyWeather{
       _latitude = position.latitude;
       // 東経がプラス、西経がマイナス
       _longitude = position.longitude;
-      print('現在地の緯度は、$_latitude');
-      print('現在地の経度は、$_longitude');
 
     //取得した緯度経度からその地点の地名情報を取得する
     final placeMarks =
     await geoCoding.placemarkFromCoordinates(_latitude, _longitude);
     final placeMark = placeMarks[0];
-    print("現在地の国は、${placeMark.country}");
-    print("現在地の県は、${placeMark.administrativeArea}");
-    print("現在地の市は、${placeMark.locality}");
   }
 
 
@@ -92,14 +87,6 @@ class MyWeather{
       }else if(wetherCondition >= 200){
         icon = '⚡';
       }
-
-      print('天気情報は$w');
-      print('天気は');
-      print(w.weatherMain);
-      print('温度は');
-      print(w.temperature?.celsius);
-      print('湿度は');
-      print(w.humidity);
 
       return [w.weatherMain!, icon, w.temperature!.celsius.toString(), w.humidity.toString()];
     } catch (e) {

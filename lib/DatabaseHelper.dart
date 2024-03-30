@@ -161,10 +161,6 @@ class DatabaseHelper{
       pp = e['point'];
     }
 
-    //DEBUG
-    print(data);
-    print("point is $pp /count is $count");
-
     return [pp, count];
   }
 
@@ -187,9 +183,5 @@ class DatabaseHelper{
       af.alarms.add(MyAlarm(e['a_id'], e['hour'], e['min'], e['audio_num'], e['validity']));
     }
     af.sortAlarm();
-
-    //DEBUG
-    print(data);
-
   }
 }
