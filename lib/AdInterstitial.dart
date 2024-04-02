@@ -9,7 +9,7 @@ class InterstitialAdManager implements InterstitialAdLoadCallback{
 
   void interstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      adUnitId: 'ca-app-pub-2742833893230662/9354183551',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {

@@ -36,7 +36,7 @@ class AdBannerState extends State<AdBanner> {
     );
   }
 
-  String get bannerAdUnitId => 'ca-app-pub-3940256099942544/6300978111';
+  String get bannerAdUnitId => 'ca-app-pub-2742833893230662/5842631181';
 
   BannerAd _createBanner(AdSize size) {
     return BannerAd(
