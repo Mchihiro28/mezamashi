@@ -1,4 +1,4 @@
-package com.example.mezamashi;
+package com.CMatsunaga.mezamashi;
 
 import io.flutter.embedding.android.FlutterActivity;
 
