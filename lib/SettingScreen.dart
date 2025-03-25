@@ -50,7 +50,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
               width: double.infinity,
               height: ss.height*0.15,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text('位置情報の使用を許可',
                       style:TextStyle(fontSize: 18)),
@@ -66,9 +66,9 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
                       switchValue = value;
                       PlantScreenState().reBuildWeather();
                       if(switchValue){
-                        sharedPref.save("weatherSetting", ["true"]);
-                      }else{
                         sharedPref.save("weatherSetting", ["false"]);
+                      }else{
+                        sharedPref.save("weatherSetting", ["true"]);
                       }
                     });},
                   ),
@@ -80,7 +80,7 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
               width: double.infinity,
               height: ss.height*0.15,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text('全てのアラームを削除',
                       style:TextStyle(fontSize: 18)),
@@ -107,11 +107,11 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
               width: double.infinity,
               height: ss.height*0.15,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text('プライバシーポリシー',
                       style:TextStyle(fontSize: 18)),
-                  SizedBox(width: ss.width*0.39),
+                  SizedBox(width: ss.width*0.2),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       shape: const StadiumBorder(),

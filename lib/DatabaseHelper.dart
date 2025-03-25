@@ -36,9 +36,7 @@ class DatabaseHelper{
   Future<Database?> get database async {
     // _databaseがNULLか判定
     // NULLの場合、_initDatabaseを呼び出しデータベースの初期化し、_databaseに返す
-    // NULLでない場合、そのまま_database変数を返す
-    // これにより、データベースを初期化する処理は、最初にデータベースを参照するときにのみ実行されるようになります。
-    // このような実装を「遅延初期化 (lazy initialization)」と呼びます。
+    // NULLでない場合、そのまま_database変数を返す。
     if (_database != null) return _database;
     _database = await _initDatabase();
     return _database;

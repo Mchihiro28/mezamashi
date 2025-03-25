@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geoCoding;
 import 'package:mezamashi/sharedPref.dart';
 import 'package:weather/weather.dart';
+import 'package:mezamashi/env.dart';
 
 class MyWeather{
   //現在地の天気を取得するクラス
@@ -62,7 +63,7 @@ class MyWeather{
     try {
       await getLocation();
       //APIキー
-      String key = "e918267d9696f7fdbbae61c7f1138671";
+      String key = Env.pass1;
       double lat = _latitude; //latitude(緯度)
       double lon = _longitude; //longitude(経度)
       WeatherFactory wf = WeatherFactory(key);

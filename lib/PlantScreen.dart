@@ -71,6 +71,7 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
     mw  = MyWeather();
     await mw.init();
     weatherText = await _getWeather();
+    print(weatherText);
 
     setState((){ });
   }
