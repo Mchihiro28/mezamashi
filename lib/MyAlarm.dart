@@ -1,27 +1,41 @@
 import 'package:alarm/alarm.dart';
 import 'dart:math' as math;
 
+///Alarm機能を実現するクラス。
+///
+///AlarmControllerによってインスタンスが生成される。
 class MyAlarm{
-  //Alarm機能を実現するクラス。AlarmControllerによってインスタンスが生成される
-  int? id; //alarmごとに固有のid
-  int hour = 12;//鳴る時間
-  int min = 0;//鳴る分
-  String assetAudio = "assets/sounds/1_default.mp3";//音源へのパス
+
+  /// alarmごとに固有のid
+  int? id;
+  /// 鳴る時間
+  int hour = 12;
+  /// 鳴る分
+  int min = 0;
+  /// 音源へのパス
+  String assetAudio = "assets/sounds/1_default.mp3";
+  /// 音源名
   String audioName ="アラーム1";
-  double fadeDuration = 0;//音量をフェードする時間
-  int audioNum = 0; //アラーム音の番号
-  int isValid = 0; //1(false)or0(true)
+  /// 音量をフェードする時間（フェードなし）
+  double fadeDuration = 0;
+  /// アラーム音の番号
+  int audioNum = 0;
+  /// アラームの有効性<br>1(false)or0(true)
+  int isValid = 0;
 
-
-  MyAlarm(int id, //constructor
+  /// constructor
+  ///
+  /// idを1にすると新規作成になる。
+  MyAlarm(int id,
           this.hour,
           this.min,
           this.audioNum,
           this.isValid,){
-    if(id < 1){ //idが-1なら新規に発行
+    if(id < 1){ // idが-1なら新規に発行
+      // TODO: タイムスタンプにすれば確実にidがかぶらない
       var random = math.Random();
       this.id = random.nextInt(2100000000);
-    }else{//そうでないならすでにあるものを適用
+    }else{ // そうでないならすでにあるものを適用
       this.id = id;
     }
 
@@ -47,6 +61,9 @@ class MyAlarm{
   }
 
 
+  /// アラームを作成するために時刻に日付の情報を追加
+  ///
+  /// 現在時刻よりも前の時刻が与えられた場合、２４時間遅らせる。
   DateTime formatDateTime(int h, int m){
     DateTime now = DateTime.now();
     DateTime res = DateTime(now.year, now.month, now.day, h, m);
@@ -56,7 +73,8 @@ class MyAlarm{
     return res;
   }
 
-  void createAlarm(){//アラームを作成する
+  /// アラームを作成してセットする。
+  void createAlarm(){
     final alarmSettings = AlarmSettings(
       id: id!,
       dateTime: formatDateTime(hour, min),
@@ -64,14 +82,17 @@ class MyAlarm{
       loopAudio: true,
       vibrate: true,
       fadeDuration: fadeDuration,
-      notificationTitle: 'アラーム',
-      notificationBody: 'アラームが鳴りました！　起きてください！',
-      enableNotificationOnKill: true,
+      notificationTitle: 'アラーム', // アラームが鳴った際の通知のタイトル
+      notificationBody: 'アラームが鳴りました！　起きてください！', // アラームが鳴った際の通知の本文
+      enableNotificationOnKill: true, // アプリを終了しようとするとユーザに通知を送る
     );
     Alarm.set(alarmSettings: alarmSettings);
   }
 
-  void snooze(int snoozeValue){  //もう一度アラームを鳴らす
+  /// スヌーズ機能を提供する。
+  ///
+  /// いったんアラームを止め、[snoozeValue]分後にもう一度アラームを鳴らす
+  void snooze(int snoozeValue){
     int thisHour = hour;
     int thisMin = min;
     stopAlarm();
@@ -83,7 +104,8 @@ class MyAlarm{
     min = thisMin;
   }
 
-  void stopAlarm(){ //alarmを停止＆削除する
+  /// alarmを停止する。
+  void stopAlarm(){
     Alarm.stop(id!);
   }
 

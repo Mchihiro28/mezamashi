@@ -4,10 +4,13 @@ import 'package:mezamashi/sharedPref.dart';
 import 'package:weather/weather.dart';
 import 'package:mezamashi/env.dart';
 
+/// 現在地の天気を取得するクラス
+///
+/// OpenWeatherAPIを用いて天気を取得する。
 class MyWeather{
-  //現在地の天気を取得するクラス
 
-  //天気を取得するかどうか(設定で変更可能)
+
+  ///天気を取得するかどうか(設定で変更可能)
   bool weatherSetting = true;
 
   //現在地取得のための変数
@@ -15,12 +18,18 @@ class MyWeather{
   double _longitude = 0.0;
 
 
+  /// [MyWeather]の初期化を行う。
+  ///
+  /// 天気を取得するかの設定を読み込む。
   Future<void> init() async{
     var data = await sharedPref.load("weatherSetting");
     data ??= ["false"];
     weatherSetting = bool.parse(data.first);
   }
 
+  /// 位置情報を取得する。
+  ///
+  /// 権限が必要。緯度・経度、地名情報を取得できる。
   Future<void> getLocation() async {
     // 権限を取得
     LocationPermission permission = await Geolocator.requestPermission();
@@ -40,12 +49,18 @@ class MyWeather{
       _longitude = position.longitude;
 
     //取得した緯度経度からその地点の地名情報を取得する
-    final placeMarks =
-    await geoCoding.placemarkFromCoordinates(_latitude, _longitude);
+    final placeMarks = await geoCoding.placemarkFromCoordinates(_latitude, _longitude);
     final placeMark = placeMarks[0];
   }
 
-
+  /// 天気を取得する。
+  ///
+  /// 返り値はサイズ3のリストで要素は以下の通り。
+  /// 1. 天気コード
+  /// 2. 温度
+  /// 3. 湿度
+  ///
+  /// 天気を取得しない場合は代わりにポイントを返す（リストサイズ1）。
   Future<List<String>> getWeather() async {
     if(!weatherSetting){
       return ['ws is f', ' pt']; //天気の代わりにポイントを表示
@@ -64,28 +79,32 @@ class MyWeather{
       await getLocation();
       //APIキー
       String key = Env.pass1;
-      double lat = _latitude; //latitude(緯度)
-      double lon = _longitude; //longitude(経度)
+      //latitude(緯度)
+      double lat = _latitude;
+      //longitude(経度)
+      double lon = _longitude;
       WeatherFactory wf = WeatherFactory(key);
 
       Weather w = await wf.currentWeatherByLocation(lat, lon);
-      int wetherCondition = w.weatherConditionCode!;
+
+      // 天気コード（天気の状態を示す）
+      int weatherCondition = w.weatherConditionCode!;
       String icon = '';
-      if(wetherCondition > 801){
+      if(weatherCondition > 801){
         icon = '☁️';
-      }else if(wetherCondition == 801){
+      }else if(weatherCondition == 801){
         icon = '⛅';
-      }else if(wetherCondition == 800){
+      }else if(weatherCondition == 800){
         icon = '☀️';
-      }else if(wetherCondition >= 700){
+      }else if(weatherCondition >= 700){
         icon = '🌀';
-      }else if(wetherCondition >= 600){
+      }else if(weatherCondition >= 600){
         icon = '❄️';
-      }else if(wetherCondition >= 500){
+      }else if(weatherCondition >= 500){
         icon = '☂️';
-      }else if(wetherCondition >= 300){
+      }else if(weatherCondition >= 300){
         icon = '🌂';
-      }else if(wetherCondition >= 200){
+      }else if(weatherCondition >= 200){
         icon = '⚡';
       }
 

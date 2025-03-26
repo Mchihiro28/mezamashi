@@ -2,15 +2,18 @@ import 'dart:collection';
 import 'DatabaseHelper.dart';
 import 'MyAlarm.dart';
 
+  ///MyAlarmクラスのインスタンスを生成、管理するクラス
 class AlarmFactory{
-  //MyAlarmクラスのインスタンスを生成、管理するクラス
-  List<MyAlarm> alarms = []; //作ったアラームのインスタンスを格納するリスト
 
+  ///作ったアラームのインスタンスを格納するリスト
+  List<MyAlarm> alarms = [];
+
+  /// インスタンスはシングルトンにする。
   static AlarmFactory instance = AlarmFactory();
-
   static AlarmFactory getInstance() => instance;
 
-  void sortAlarm(){ //alarmを時刻順に並び替える
+  ///alarmを時刻順に並び替える。
+  void sortAlarm(){
     SplayTreeMap<int, MyAlarm> timeValues = SplayTreeMap();
     for (var element in alarms) {
       timeValues[element.hour*60 +element.min] = element;
@@ -19,9 +22,14 @@ class AlarmFactory{
     alarms.addAll(List.from(timeValues.values));
   }
 
-  MyAlarm createAlarms( int hour,  //新しいalarmを作成
+  /// アラームを新規発行しデータベースに登録する。
+  ///
+  /// アラームは有効な状態で作成される。
+  /// 時間[hour]、分[min]、音源番号[audioNum]を指定する。
+  MyAlarm createAlarms( int hour,
                      int min,
                      int audioNum){
+
     MyAlarm customAlarm = MyAlarm(-1,hour, min, audioNum, 0);
     customAlarm.createAlarm();
     alarms.add(customAlarm);
@@ -30,15 +38,20 @@ class AlarmFactory{
     return customAlarm;
   }
 
-  void deleteAlarm(int index){ //alarmを削除する
+  /// [index]番目のalarmを削除する。
+  void deleteAlarm(int index){
     if(alarms.isNotEmpty) {
+      // データベースから削除
       DatabaseHelper.delete(DatabaseHelper.alarmTable, alarms[index].id!);
+      // アラームが鳴らないよう止める
       alarms[index].stopAlarm();
+      // アラームを削除
       alarms.removeAt(index);
     }
   }
 
-  void deleteAllAlarm(){ //全てのアラームを削除
+  /// すべてのアラームを削除する。
+  void deleteAllAlarm(){
     for(var e in alarms){
       DatabaseHelper.delete(DatabaseHelper.alarmTable, e.id!);
       e.stopAlarm();
@@ -46,7 +59,10 @@ class AlarmFactory{
     alarms.clear();
   }
 
-  void changeValidity(int index, int validity){ //アラームの有効性を変化させて、dbをupdateする関数
+  /// alarmの有効性を変化させる。
+  ///
+  /// [index]番目のアラームの有効性を[validity]に変化させて、その後データベースをupdateする。
+  void changeValidity(int index, int validity){
     alarms[index].isValid = validity;
 
     DatabaseHelper.update(DatabaseHelper.alarmTable,
@@ -60,7 +76,8 @@ class AlarmFactory{
     );
   }
 
-  void resetAllAlarm(){ //全てのアラームを解除して再セット
+  ///全てのアラームを解除した後、再セットする。
+  void resetAllAlarm(){
     for(var e in alarms){
       if(e.isValid == 0){
         e.stopAlarm();

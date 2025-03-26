@@ -1,6 +1,8 @@
 import 'package:envied/envied.dart';
 part "env.g.dart";
 
+
+/// Enviedを用いてAPIキーを隠ぺいする。
 @Envied(path: 'env/.env')
 abstract class Env {
 

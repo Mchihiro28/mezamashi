@@ -4,8 +4,15 @@ import 'package:mezamashi/PlantScreen.dart';
 import 'package:mezamashi/alarmListScreen.dart';
 import 'package:mezamashi/sharedPref.dart';
 
+///設定画面　
+///
+///メイン画面の一つ
+///設定項目は以下の通り。
+/// - 天気を取得するか（トグルスイッチ）
+/// - すべてのalarmを削除する（ボタン）
+/// - プライバシーポリシーの表示（ボタン）
 class SettingScreen extends StatefulWidget{
-  //設定画面　メイン画面の一つ
+
   const SettingScreen({super.key});
 
   @override
@@ -26,6 +33,9 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
     _init();
   }
 
+  /// 画面の初期化を行う。
+  ///
+  /// 天気の取得可否を読み込む。
   Future<void> _init()async{
     var data = await sharedPref.load("weatherSetting");
     data ??= ["false"];
@@ -133,6 +143,9 @@ class SettingScreenState extends State<SettingScreen> with AutomaticKeepAliveCli
     );
   }
 
+  /// プライバシーポリシーを表示する。
+  ///
+  /// alertDialogでプライバシーポリシーを表示する。
   void _myDialog() { //プライバシーポリシーを表示するalertdialog
 
     const String PRIVACY_POLICY = '''

@@ -4,6 +4,9 @@ import 'package:mezamashi/sharedPref.dart';
 
 import 'BottomNavigationBar.dart';
 
+/// チュートリアル画面のクラス
+///
+/// 初回起動の際にアプリの説明をする。
 class Intro extends StatelessWidget {
   // Making list of pages needed to pass in IntroViewsFlutter constructor.
   final pages = [

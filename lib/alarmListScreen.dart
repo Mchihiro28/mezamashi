@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:mezamashi/DatabaseHelper.dart';
 import 'package:mezamashi/ringScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import 'AdInterstitial.dart';
 import 'AlarmFactory.dart';
 import 'ManagePoint.dart';
 import 'SimpleDialog.dart';
 
+///アラームを管理する画面
+///
+///メイン画面の一つで、Stateを維持したまま画面を切り替えることができる。
 class alarmListScreen extends StatefulWidget{
-  //アラームを管理する画面　メイン画面の一つ
   const alarmListScreen({super.key});
 
   @override
@@ -28,31 +31,42 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
   }
   alarmListScreenState._internal();
 
- AlarmFactory af = AlarmFactory.getInstance();
- InterstitialAdManager interstitialAdManager = InterstitialAdManager();
- late final ManagePoint mp;
- bool switchValue = false;
- bool isInitStream = false;
- late List<AlarmSettings> alarms;
- StreamSubscription<AlarmSettings>? subscription; //alarmが鳴ったことをlistenするstream
+  // AlarmFactoryのインスタンスを取得
+  AlarmFactory af = AlarmFactory.getInstance();
+  InterstitialAdManager interstitialAdManager = InterstitialAdManager();
+
+  // ManagePointを遅延初期化
+  late final ManagePoint mp;
+
+  bool switchValue = false;
+  bool isInitStream = false;
+  late List<AlarmSettings> alarms;
+
+  // alarmが鳴ったことを感知するstream
+  StreamSubscription<AlarmSettings>? subscription;
 
 
  @override
  initState(){
    super.initState();
+   // 画面の更新を行い、アラームとポイントを読み込む
    _reBuild();
    AlarmStorage.init();
    interstitialAdManager.interstitialAd();
    if (Alarm.android) {
      checkAndroidNotificationPermission();
    }
-   setStream(); //アプリの起動時に一回だけ呼ぶ
+   // アプリの起動時に一回だけ呼ぶ
+   setStream();
  }
 
- @override //stateの保持
+ @override // Stateの保持
  bool get wantKeepAlive => true;
 
- void setStream(){ //streamをセットする関数
+ /// アラームが鳴ったのを感知するStreamをセットする関数
+ ///
+ /// 起動時に一度だけ呼ばれる。
+ void setStream(){
    if(isInitStream == false) {
      subscription ??= Alarm.ringStream.stream.listen(
            (alarmSettings) => navigateToRingScreen(alarmSettings),
@@ -69,6 +83,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    super.dispose();
  }
 
+ // ringScreenへと遷移させる（ringScreenが上に重なる状態）
  Future<void> navigateToRingScreen(AlarmSettings alarmSettings) async {
    await Navigator.push(
        context,
@@ -79,7 +94,10 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
 
  }
 
- Future<void> createNewAlarm(BuildContext context) async { //alarmを作成する関数
+ /// ボタンを押した際にalarmを作成する関数
+ ///
+ /// タイムピッカーを使用し、デフォルトの時間として現在時刻が入力された状態である。
+ Future<void> createNewAlarm(BuildContext context) async {
    TimeOfDay selectedTime = TimeOfDay.now();
    final TimeOfDay? picked = await showTimePicker(//time picker
      context: context,
@@ -91,6 +109,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    if (picked == null) return;
    if (!mounted) return;
 
+   // ダイアログを表示して音源の選択
    final int? selectedAudio = await showDialog<int>(
        context: context,
        builder: (_) {
@@ -98,6 +117,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
        });
 
 
+   // 画面の更新とアラームの登録、インタースティシャル広告の表示
    setState(() {
       selectedTime = picked;
       af.createAlarms(selectedTime.hour, selectedTime.minute, selectedAudio ?? 1);
@@ -105,6 +125,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
     });
  }
 
+ /// 通知を表示する権限の有無をチェックする。
  Future<void> checkAndroidNotificationPermission() async {
    final status = await Permission.notification.status;
    if (status.isDenied) {
@@ -116,6 +137,7 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    }
  }
 
+ /// アプリ外の共有ストレージを使用する権限の有無をチェックする。
  Future<void> checkAndroidExternalStoragePermission() async {
    final status = await Permission.storage.status;
    if (status.isDenied) {
@@ -127,10 +149,14 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
    }
  }
 
+ /// 画面の更新をする関数
+ ///
+ /// アラームの更新、ポイントの更新を行う。
  Future<void> _reBuild() async{
    await DatabaseHelper.getAlarmDB(af);
    mp = await ManagePoint.getInstance();
    mp.addPoint(ManagePoint.loginPoint); //ログインボーナス
+   // 画面の再描画
    setState((){ });
  }
 
@@ -139,20 +165,22 @@ class alarmListScreenState extends State<alarmListScreen> with AutomaticKeepAliv
  @override
   Widget build(BuildContext context) {
     super.build(context);
-   var ss = MediaQuery.of(context).size;
+
+    // 画面サイズを取得
+    var ss = MediaQuery.of(context).size;
   return MaterialApp(
     title: 'alarm',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(primarySwatch: Colors.blue),
     home: Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton( //アラーム作成ボタン
           onPressed: () => {
             createNewAlarm(context)
           },
           child: const Icon(Icons.add_alarm)
       ),
-      body: Container(
+      body: Container( // アラームを並べて表示するコンテナ
             constraints: const BoxConstraints.expand(),
             padding: const EdgeInsets.all(4),
             // 配列を元にリスト表示

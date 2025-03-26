@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+/// admobのバナー広告を表示するクラス
 class AdBanner extends StatefulWidget {
+
   const AdBanner({
     super.key,
     required this.size,
@@ -36,8 +38,10 @@ class AdBannerState extends State<AdBanner> {
     );
   }
 
+  /// admobの広告id
   String get bannerAdUnitId => 'ca-app-pub-2742833893230662/5842631181';
 
+  /// 指定したサイズのバナー広告を作成する。
   BannerAd _createBanner(AdSize size) {
     return BannerAd(
       size: size,

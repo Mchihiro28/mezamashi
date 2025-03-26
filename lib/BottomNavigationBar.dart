@@ -5,8 +5,11 @@ import 'package:mezamashi/SettingScreen.dart';
 import 'package:mezamashi/alarmListScreen.dart';
 import 'AdBanner.dart';
 
+/// BottomNavigationBar
+///
+/// 画面の下側にあり、３つのメイン画面を遷移するためのバー
 class BottomNavigationBarScreen extends StatefulWidget{
-  //BottomNavigationBar
+
   const BottomNavigationBarScreen({super.key});
 
   @override
@@ -14,7 +17,9 @@ class BottomNavigationBarScreen extends StatefulWidget{
 }
 
 class BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>{
-  int _selectedIndex = 1; //bottom navigation barがタップされた場所を格納する変数
+  /// bottom navigation barがタップされた場所を格納する変数
+  int _selectedIndex = 1;
+  /// ページコントローラー　alarmListScreenからスタート
   final PageController _controller = PageController(initialPage: 1);
 
   @override
@@ -27,7 +32,7 @@ class BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>{
         resizeToAvoidBottomInset: false,
         body: PageView(
           controller: _controller,
-          children: const [
+          children: const [ // 切り替えられるページリスト
               PlantScreen(),
               alarmListScreen(),
               SettingScreen(),

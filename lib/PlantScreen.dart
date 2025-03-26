@@ -5,8 +5,11 @@ import 'dart:math' as math;
 
 import 'package:mezamashi/sharedPref.dart';
 
+/// 朝顔を表示する画面
+///
+/// メイン画面の一つであり、朝顔の画像と天気が表示される。
 class PlantScreen extends StatefulWidget{
-  //朝顔の画面　メイン画面の一つ
+
   const PlantScreen({super.key});
 
   @override
@@ -26,10 +29,15 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
 
   late ManagePoint mp;
   late MyWeather mw;
-  String flowerImage = "lv0"; //花の画像を表示するパス
-  String backImage = "background_day"; //背景の画像を表示するパス
-  String weatherText = ""; //天気のテキスト
-  String isSnackBar = "false"; //snackbarを表示するフラグ
+
+  ///花の画像を表示するパス
+  String flowerImage = "lv0";
+  ///背景の画像を表示するパス
+  String backImage = "background_day";
+  ///天気のテキスト
+  String weatherText = "";
+  ///snackbarを表示するフラグ兼文章
+  String isSnackBar = "false";
 
   @override
   initState(){
@@ -37,22 +45,29 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
     _reBuildImage();
   }
 
-  Future<void> _reBuildImage() async{ //画像関係のロード
+  /// 画像関係のロードを行う。
+  ///
+  /// 朝顔の画像、空の画像についてファイル名を決定して読み込む。
+  Future<void> _reBuildImage() async{
     mp = await ManagePoint.getInstance();
+    // 朝顔の画像の差分
     int randomNum = math.Random().nextInt(5) + 1;
     List<String>? preName = await sharedPref.load("random");
     preName ??= [""];
 
+    // 現在時刻に応じて空の画像を切替
     if(mp.isNight()){
       backImage = "background_night";
     }else{
       backImage = "background_day";
     }
+
+    // ポイントに応じて朝顔の画像を決定
     flowerImage = mp.applyPoint();
 
-    //画像名の最後が0以上か（朝顔の咲いた画像か）判定
+    // 画像名の最後が0以上か（朝顔の咲いた画像か）判定
     if(flowerImage.substring(flowerImage.length-1, flowerImage.length) == 'o'){
-    //以前の画像名と今の画像名が同じなら保存していたrandomNumを適用
+    // 以前の画像名と今の画像名が同じなら保存していたrandomNumを適用
     if(preName[0] == flowerImage){
         randomNum = int.parse(preName[1]);
       }
@@ -60,13 +75,12 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
       flowerImage = flowerImage + randomNum.toString();
     }
 
-    
-
     setState((){ });
 
     reBuildWeather();
   }
 
+  /// 天気を表示して画面の更新を行う。
   Future<void> reBuildWeather() async{ //天気のロード
     mw  = MyWeather();
     await mw.init();
@@ -76,6 +90,9 @@ class PlantScreenState extends State<PlantScreen> with AutomaticKeepAliveClientM
     setState((){ });
   }
 
+  /// 天気を取得する。
+  ///
+  /// 返り値は「<天気コード> <気温> <湿度>」または「<ポイント>」
   Future<String> _getWeather() async{
     List<String> s = await mw.getWeather();
     if(s.first == 'ws is f'){
